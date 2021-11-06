@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 

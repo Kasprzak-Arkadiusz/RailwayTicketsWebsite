@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Application.Interfaces;
-using Domain.Models;
+﻿using Application.Interfaces;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Persistence.Context
 {
@@ -166,6 +166,7 @@ namespace Persistence.Context
 
             base.OnModelCreating(modelBuilder);
         }
+
         public async Task<int> SaveChanges()
         {
             return await base.SaveChangesAsync();

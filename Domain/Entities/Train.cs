@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Domain.Common;
+using System.Collections.Generic;
 
-namespace Domain.Models
+namespace Domain.Entities
 {
     public class Train : BaseEntity
     {

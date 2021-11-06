@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Domain.Common;
+using System;
 
-namespace Domain.Models
+namespace Domain.Entities
 {
     public class ReturnedTicket : BaseEntity
     {

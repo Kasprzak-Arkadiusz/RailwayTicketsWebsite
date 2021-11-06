@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Domain.Common;
+using System;
 using System.Collections.Generic;
 
-namespace Domain.Models
+namespace Domain.Entities
 {
     public class Ticket : BaseEntity
     {
