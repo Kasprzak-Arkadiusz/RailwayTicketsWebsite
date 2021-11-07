@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(TrainDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class TrainDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

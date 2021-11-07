@@ -10,12 +10,12 @@ namespace Persistence
     {
         public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<TrainDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(TrainDbContext).Assembly.FullName)));
+                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<TrainDbContext>());
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
         }
     }
 }

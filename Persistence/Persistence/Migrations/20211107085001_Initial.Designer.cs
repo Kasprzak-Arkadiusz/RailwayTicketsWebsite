@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(TrainDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20211107085001_Initial")]
     partial class Initial
     {

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
-    public class TrainDbContext : DbContext, IApplicationDbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        public TrainDbContext()
+        public ApplicationDbContext()
         {
         }
 
-        public TrainDbContext(DbContextOptions<TrainDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
         public DbSet<ReturnedTicket> ReturnedTickets { get; set; }
