@@ -15,7 +15,7 @@ namespace Domain.Entities
         public int Route { get; set; }
         public DateTime DayOfDeparture { get; set; }
         public int Seat { get; set; }
-        public short Train { get; set; }
+        public int Train { get; set; }
 
         public virtual Route RouteNavigation { get; set; }
         public virtual Seat SeatNavigation { get; set; }

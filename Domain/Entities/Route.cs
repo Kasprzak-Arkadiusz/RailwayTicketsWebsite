@@ -10,8 +10,8 @@ namespace Domain.Entities
             Tickets = new HashSet<Ticket>();
         }
 
-        public short StartingStation { get; set; }
-        public short FinalStation { get; set; }
+        public int StartingStation { get; set; }
+        public int FinalStation { get; set; }
         public short DepartureTimeInMinutesPastMidnight { get; set; }
         public short ArrivalTimeInMinutesPastMidnight { get; set; }
         public bool IsOnHold { get; set; }

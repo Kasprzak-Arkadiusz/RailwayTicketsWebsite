@@ -10,7 +10,7 @@ namespace Domain.Entities
             Tickets = new HashSet<Ticket>();
         }
 
-        public short Train { get; set; }
+        public int Train { get; set; }
         public byte Car { get; set; }
         public byte Number { get; set; }
         public bool? IsFree { get; set; }
