@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, UserRole, string>, IApplicationDbContext
     {
         public ApplicationDbContext()
         {
