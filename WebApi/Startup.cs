@@ -1,11 +1,11 @@
 using Application.Common;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Persistence;
 
 namespace WebApi
 {
@@ -28,7 +28,7 @@ namespace WebApi
             });
 
             services.AddApplication();
-            services.AddPersistence(Configuration);
+            services.AddInfrastructure(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
