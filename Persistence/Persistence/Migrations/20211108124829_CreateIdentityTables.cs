@@ -30,7 +30,6 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),

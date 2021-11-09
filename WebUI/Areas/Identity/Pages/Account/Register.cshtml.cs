@@ -40,7 +40,6 @@ namespace WebUI.Areas.Identity.Pages.Account
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
-
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public class InputModel
@@ -72,43 +71,47 @@ namespace WebUI.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid)
+                return Page();
+
+            var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+            var result = await _userManager.CreateAsync(user, Input.Password);
+            if (result.Succeeded)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
+                _logger.LogInformation("User created a new account with password.");
+
+                var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
+                const string subject = "Confirm your email";
+                var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+                await _emailSender.SendEmailAsync(Input.Email, subject, htmlMessage);
+
+                if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        null,
-                        new { area = "Identity", userId = user.Id, code, returnUrl },
-                        Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+
+                await _signInManager.SignInAsync(user, false);
+                return LocalRedirect(returnUrl);
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task<string> CreateCallbackUrlAsync(ApplicationUser user, string returnUrl)
+        {
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            return Url.Page(
+                "/Account/ConfirmEmail",
+                null,
+                new { area = "Identity", userId = user.Id, code, returnUrl },
+                Request.Scheme);
         }
     }
 }
