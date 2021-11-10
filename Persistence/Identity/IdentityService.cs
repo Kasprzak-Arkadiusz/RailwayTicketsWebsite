@@ -49,7 +49,20 @@ namespace Infrastructure.Identity
             };
 
             var result = await _userManager.CreateAsync(user, password);
+            return (result.ToApplicationResult(), user.Id);
+        }
 
+        public async Task<(Result Result, string UserId)> CreateUserAsync(ApplicationUserParams userParams)
+        {
+            var user = new ApplicationUser
+            {
+                FirstName = userParams.FirstName,
+                LastName = userParams.LastName,
+                Email = userParams.Email,
+                UserName = userParams.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user);
             return (result.ToApplicationResult(), user.Id);
         }
 
@@ -109,9 +122,56 @@ namespace Infrastructure.Identity
             return userId;
         }
 
+        public async Task SignOutUserAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
         public bool SignInRequireConfirmedAccount()
         {
             return _userManager.Options.SignIn.RequireConfirmedAccount;
+        }
+
+        public async Task<Result> PasswordSignInAsync(string userName, string password, bool rememberMe)
+        {
+            var result = await _signInManager.PasswordSignInAsync(userName, password, rememberMe, false);
+            return result.ToApplicationResult();
+        }
+
+        public async Task<string> FindByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user.Id;
+        }
+
+        public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl)
+        {
+            return _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        }
+
+        public async Task<object> GetExternalLoginInfoAsync()
+        {
+            return await _signInManager.GetExternalLoginInfoAsync();
+        }
+
+        public async Task<Result> ExternalLoginSignInAsync(string loginProvider, string providerKey)
+        {
+            var result = await _signInManager.ExternalLoginSignInAsync(loginProvider, providerKey, false, true);
+            return result.ToApplicationResult();
+        }
+
+        public async Task<(Result Result, string UserId)> AddLoginAsync(ApplicationUserParams userParams, object info)
+        {
+            var user = new ApplicationUser
+            {
+                FirstName = userParams.FirstName,
+                LastName = userParams.LastName,
+                Email = userParams.Email,
+                UserName = userParams.UserName
+            };
+            var result = await _userManager.AddLoginAsync(user, (UserLoginInfo) info);
+
+            return (result.ToApplicationResult(), user.Id);
         }
     }
 }

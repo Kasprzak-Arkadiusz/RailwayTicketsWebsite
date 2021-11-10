@@ -122,7 +122,6 @@ namespace WebUI.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, error);
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

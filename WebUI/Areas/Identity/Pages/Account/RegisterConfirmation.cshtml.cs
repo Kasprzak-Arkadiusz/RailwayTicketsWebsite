@@ -1,11 +1,8 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebUI.Areas.Identity.Pages.Account
@@ -13,12 +10,14 @@ namespace WebUI.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
         private readonly IEmailSender _sender;
 
-        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(
+            IIdentityService identityService,
+            IEmailSender sender)
         {
-            _userManager = userManager;
+            _identityService = identityService;
             _sender = sender;
         }
 
@@ -35,8 +34,8 @@ namespace WebUI.Areas.Identity.Pages.Account
                 return RedirectToPage("/Index");
             }
 
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
+            var userId = await _identityService.FindByEmailAsync(email);
+            if (string.IsNullOrEmpty(userId))
             {
                 return NotFound($"Unable to load user with email '{email}'.");
             }
@@ -44,11 +43,11 @@ namespace WebUI.Areas.Identity.Pages.Account
             Email = email;
             // Once you add a real email sender, you should remove this code that lets you confirm the account
             DisplayConfirmAccountLink = true;
+
             if (DisplayConfirmAccountLink)
             {
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var code = await _identityService.GenerateEmailConfirmationTokenAsync(userId);
+                returnUrl ??= Url.Content("~/");
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
