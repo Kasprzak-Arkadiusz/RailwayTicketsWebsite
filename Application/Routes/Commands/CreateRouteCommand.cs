@@ -36,7 +36,7 @@ namespace Application.Routes.Commands
             };
 
             await _context.Routes.AddAsync(entity, cancellationToken);
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return entity.Id;
         }

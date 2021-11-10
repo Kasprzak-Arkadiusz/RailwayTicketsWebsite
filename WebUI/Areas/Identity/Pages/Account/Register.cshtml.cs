@@ -1,16 +1,13 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
@@ -19,19 +16,16 @@ namespace WebUI.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            IIdentityService identityService,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _identityService = identityService;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -44,6 +38,21 @@ namespace WebUI.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required]
+            [Display(Name = "First name")]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last name")]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            public string LastName { get; set; }
+
+            [Required]
+            [Display(Name = "Username")]
+            [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            public string UserName { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -64,54 +73,57 @@ namespace WebUI.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = await _identityService.GetExternalLogins();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = await _identityService.GetExternalLogins();
 
             if (!ModelState.IsValid)
                 return Page();
 
-            var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
-            var result = await _userManager.CreateAsync(user, Input.Password);
-            if (result.Succeeded)
+            var user = new ApplicationUserParams
             {
-                _logger.LogInformation("User created a new account with password.");
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                Email = Input.Email,
+                UserName = Input.UserName,
+            };
 
-                var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
+            var result = await _identityService.CreateUserAsync(user, Input.Password);
+            if (result.Result.Succeeded)
+            {
+                _logger.LogInformation($"User \"{user.UserName}\" created a new account with password.");
+
+                var userId = result.UserId;
+                var code = _identityService.GenerateEmailConfirmationTokenAsync(userId);
+                returnUrl ??= Url.Content("~/");
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    null,
+                    new { area = "Identity", userId = userId, code, returnUrl },
+                    Request.Scheme);
+
                 const string subject = "Confirm your email";
                 var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
                 await _emailSender.SendEmailAsync(Input.Email, subject, htmlMessage);
 
-                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                if (_identityService.SignInRequireConfirmedAccount())
                 {
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
                 }
 
-                await _signInManager.SignInAsync(user, false);
+                await _identityService.SignInUserAsync(userId);
                 return LocalRedirect(returnUrl);
             }
-            foreach (var error in result.Errors)
+            foreach (var error in result.Result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, error);
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
-        }
-
-        private async Task<string> CreateCallbackUrlAsync(ApplicationUser user, string returnUrl)
-        {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            return Url.Page(
-                "/Account/ConfirmEmail",
-                null,
-                new { area = "Identity", userId = user.Id, code, returnUrl },
-                Request.Scheme);
         }
     }
 }

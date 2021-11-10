@@ -1,4 +1,6 @@
 ﻿using Application.Common.Models;
+using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Common.Interfaces
@@ -11,8 +13,16 @@ namespace Application.Common.Interfaces
 
         Task<bool> AuthorizeAsync(string userId, string policyName);
 
-        Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
+        Task<(Result Result, string UserId)> CreateUserAsync(ApplicationUserParams useParams, string password);
 
         Task<Result> DeleteUserAsync(string userId);
+
+        Task<IList<AuthenticationScheme>> GetExternalLogins();
+
+        Task<string> GenerateEmailConfirmationTokenAsync(string userId);
+
+        Task<string> SignInUserAsync(string userId);
+
+        public bool SignInRequireConfirmedAccount();
     }
 }

@@ -1,9 +1,13 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Identity
@@ -11,15 +15,18 @@ namespace Infrastructure.Identity
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
         private readonly IAuthorizationService _authorizationService;
 
         public IdentityService(
             UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
             IAuthorizationService authorizationService)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
             _authorizationService = authorizationService;
         }
@@ -31,12 +38,14 @@ namespace Infrastructure.Identity
             return user.UserName;
         }
 
-        public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+        public async Task<(Result Result, string UserId)> CreateUserAsync(ApplicationUserParams userParams, string password)
         {
             var user = new ApplicationUser
             {
-                UserName = userName,
-                Email = userName,
+                FirstName = userParams.FirstName,
+                LastName = userParams.LastName,
+                Email = userParams.Email,
+                UserName = userParams.UserName
             };
 
             var result = await _userManager.CreateAsync(user, password);
@@ -79,6 +88,30 @@ namespace Infrastructure.Identity
             var result = await _userManager.DeleteAsync(user);
 
             return result.ToApplicationResult();
+        }
+
+        public async Task<IList<AuthenticationScheme>> GetExternalLogins()
+        {
+            return (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        }
+
+        public async Task<string> SignInUserAsync(string userId)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+            await _signInManager.SignInAsync(user, false);
+            return userId;
+        }
+
+        public bool SignInRequireConfirmedAccount()
+        {
+            return _userManager.Options.SignIn.RequireConfirmedAccount;
         }
     }
 }

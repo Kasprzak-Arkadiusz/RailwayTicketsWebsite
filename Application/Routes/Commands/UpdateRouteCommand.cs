@@ -36,7 +36,7 @@ namespace Application.Routes.Commands
             entity.ArrivalTimeInMinutesPastMidnight = request.ArrivalTimeInMinutesPastMidnight;
             entity.IsOnHold = request.IsOnHold;
 
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Unit.Value;
         }

@@ -39,7 +39,7 @@ namespace Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
         }
 
-        public async Task<int> SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
         }

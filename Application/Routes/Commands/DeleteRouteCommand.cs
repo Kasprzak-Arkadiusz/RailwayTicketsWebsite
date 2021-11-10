@@ -35,7 +35,7 @@ namespace Application.Routes.Commands
             }
 
             _context.Routes.Remove(entity);
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Unit.Value;
         }
