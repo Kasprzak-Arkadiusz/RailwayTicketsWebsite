@@ -1,4 +1,5 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
+using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,11 @@ namespace Infrastructure
             {
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
             });
+
+            services.AddTransient<IIdentityService, IdentityService>();
         }
     }
 }

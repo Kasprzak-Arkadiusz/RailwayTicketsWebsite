@@ -32,10 +32,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             {
                 return LocalRedirect(returnUrl);
             }
-            else
-            {
-                return RedirectToPage();
-            }
+            return RedirectToPage();
         }
     }
 }

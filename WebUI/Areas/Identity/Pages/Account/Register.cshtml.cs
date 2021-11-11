@@ -45,14 +45,27 @@ namespace WebUI.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "First name")]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last name")]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            public string LastName { get; set; }
+
+            [Required]
+            [Display(Name = "Username")]
+            [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            public string UserName { get; set; }
+
+            [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
             public string Email { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
@@ -69,18 +82,24 @@ namespace WebUI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (!ModelState.IsValid)
                 return Page();
 
-            var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+            var user = new ApplicationUser
+            {
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                UserName = Input.Email,
+                Email = Input.Email
+            };
             var result = await _userManager.CreateAsync(user, Input.Password);
             if (result.Succeeded)
             {
-                _logger.LogInformation("User created a new account with password.");
+                _logger.LogInformation($"User \"{user.UserName} \" created a new account with password.");
 
+                returnUrl ??= Url.Content("~/");
                 var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
                 const string subject = "Confirm your email";
                 var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
@@ -94,12 +113,8 @@ namespace WebUI.Areas.Identity.Pages.Account
                 await _signInManager.SignInAsync(user, false);
                 return LocalRedirect(returnUrl);
             }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            AddModelStateErrors(result);
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
@@ -113,5 +128,14 @@ namespace WebUI.Areas.Identity.Pages.Account
                 new { area = "Identity", userId = user.Id, code, returnUrl },
                 Request.Scheme);
         }
+
+        private void AddModelStateErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
     }
 }
