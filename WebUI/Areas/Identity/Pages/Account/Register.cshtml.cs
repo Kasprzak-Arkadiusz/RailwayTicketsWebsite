@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Domain.Enums;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -91,10 +92,11 @@ namespace WebUI.Areas.Identity.Pages.Account
             {
                 FirstName = Input.FirstName,
                 LastName = Input.LastName,
-                UserName = Input.Email,
+                UserName = Input.UserName,
                 Email = Input.Email
             };
             var result = await _userManager.CreateAsync(user, Input.Password);
+            await _userManager.AddToRoleAsync(user, Role.User.ToString());
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User \"{user.UserName} \" created a new account with password.");

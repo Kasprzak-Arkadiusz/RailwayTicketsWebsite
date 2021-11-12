@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Common.Interfaces;
 
 namespace Infrastructure.Persistence
 {
     public static class ApplicationDbContextSeed
     {
-        public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+        public static async Task SeedSampleDataAsync(IApplicationDbContext context)
         {
             if (!context.Stations.Any())
             {

@@ -31,19 +31,6 @@ namespace Infrastructure.Identity
             return user.UserName;
         }
 
-        public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
-        {
-            var user = new ApplicationUser
-            {
-                UserName = userName,
-                Email = userName,
-            };
-
-            var result = await _userManager.CreateAsync(user, password);
-
-            return (result.ToApplicationResult(), user.Id);
-        }
-
         public async Task<bool> IsInRoleAsync(string userId, string role)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
@@ -74,7 +61,7 @@ namespace Infrastructure.Identity
             return Result.Success();
         }
 
-        public async Task<Result> DeleteUserAsync(ApplicationUser user)
+        private async Task<Result> DeleteUserAsync(ApplicationUser user)
         {
             var result = await _userManager.DeleteAsync(user);
 

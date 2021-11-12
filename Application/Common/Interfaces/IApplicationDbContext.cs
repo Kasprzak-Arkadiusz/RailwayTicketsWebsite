@@ -13,6 +13,6 @@ namespace Application.Common.Interfaces
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Train> Trains { get; set; }
 
-        Task<int> SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }
