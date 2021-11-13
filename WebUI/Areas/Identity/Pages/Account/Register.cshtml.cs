@@ -1,8 +1,9 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
+using Domain.Enums;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Domain.Enums;
+using Application.Common.Models;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -23,13 +24,13 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailService emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -102,10 +103,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                 _logger.LogInformation($"User \"{user.UserName} \" created a new account with password.");
 
                 returnUrl ??= Url.Content("~/");
-                var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
-                const string subject = "Confirm your email";
-                var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
-                await _emailSender.SendEmailAsync(Input.Email, subject, htmlMessage);
+                await SendConfirmationEmailAsync(returnUrl, user);
 
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {
@@ -139,5 +137,13 @@ namespace WebUI.Areas.Identity.Pages.Account
             }
         }
 
+        private async Task SendConfirmationEmailAsync(string returnUrl, ApplicationUser user)
+        {
+            var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
+            const string subject = "Confirm your email";
+            var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+            var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
+            await _emailSender.SendEmailAsync(address, subject, htmlMessage);
+        }
     }
 }

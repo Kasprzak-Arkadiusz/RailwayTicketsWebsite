@@ -11,6 +11,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Application.Common.Interfaces;
+using Application.Common.Models;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -19,14 +21,14 @@ namespace WebUI.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailService emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -159,8 +161,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId, code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        await SendConfirmationEmailAsync(callbackUrl, user);
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -182,6 +183,14 @@ namespace WebUI.Areas.Identity.Pages.Account
             ProviderDisplayName = info.ProviderDisplayName;
             ReturnUrl = returnUrl;
             return Page();
+        }
+
+        private async Task SendConfirmationEmailAsync(string callbackUrl, ApplicationUser user)
+        {
+            const string subject = "Confirm your email";
+            var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+            var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
+            await _emailSender.SendEmailAsync(address, subject, htmlMessage);
         }
     }
 }
