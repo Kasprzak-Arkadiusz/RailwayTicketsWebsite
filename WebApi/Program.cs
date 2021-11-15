@@ -42,6 +42,10 @@ namespace WebApi
                     Log.Error(ex, "An error occurred while migrating or seeding the database.");
                     throw;
                 }
+                finally
+                {
+                    Log.CloseAndFlush();
+                }
             }
 
             await host.RunAsync();
