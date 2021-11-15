@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Enums;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
@@ -8,13 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Application.Common.Models;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -23,18 +23,15 @@ namespace WebUI.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
             IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
             _emailService = emailService;
         }
 
@@ -100,7 +97,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             var addToRoleResult = await _userManager.AddToRoleAsync(user, Role.User.ToString());
             if (createUserResult.Succeeded && addToRoleResult.Succeeded)
             {
-                _logger.LogInformation($"User \"{user.UserName} \" created a new account with password.");
+                Log.Information($"User \"{user.UserName} \" created a new account with password.");
 
                 returnUrl ??= Url.Content("~/");
                 var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);

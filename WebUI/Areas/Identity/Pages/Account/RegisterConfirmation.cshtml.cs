@@ -48,7 +48,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 EmailConfirmationUrl = Url.Page(
-                    "/Account/ConfirmEmail",
+                    pageName: "/Account/ConfirmEmail",
                     pageHandler: null,
                     values: new { area = "Identity", userId, code, returnUrl },
                     protocol: Request.Scheme);
