@@ -10,7 +10,7 @@ using Serilog;
 using System;
 using System.Threading.Tasks;
 
-namespace WebApi
+namespace WebApp
 {
     public class Program
     {

@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebUI.Areas.Identity.Pages.Account.Manage
+namespace WebApp.Frontend.Areas.Identity.Pages.Account.Manage
 {
     public class EmailModel : PageModel
     {

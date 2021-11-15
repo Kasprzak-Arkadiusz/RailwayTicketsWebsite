@@ -3,7 +3,7 @@ using Application.Routes.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace WebApi.Controllers
+namespace WebApp.Backend.Controllers
 {
     public class RouteController : BaseApiController
     {

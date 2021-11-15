@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace WebUI.Areas.Identity.Pages.Account.Manage
+namespace WebApp.Frontend.Areas.Identity.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {
