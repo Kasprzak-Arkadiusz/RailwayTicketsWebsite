@@ -1,11 +1,12 @@
 ﻿using Application.Common.Interfaces;
-using MimeKit;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using MimeKit.Text;
 using Application.Common.Models;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MimeKit.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
-namespace Infrastructure.Services.EmailSender
+namespace Infrastructure.Services.EmailService
 {
     public class EmailService : IEmailService
     {
@@ -38,5 +39,11 @@ namespace Infrastructure.Services.EmailSender
             await emailClient.DisconnectAsync(true);
         }
 
+        public async Task SendConfirmationEmailAsync(string callbackUrl, EmailAddress emailAddress)
+        {
+            const string subject = "Confirm your email";
+            var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+            await SendEmailAsync(emailAddress, subject, htmlMessage);
+        }
     }
 }

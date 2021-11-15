@@ -24,18 +24,18 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailService _emailSender;
+        private readonly IEmailService _emailService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailService emailSender)
+            IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _emailService = emailService;
         }
 
         [BindProperty]
@@ -96,14 +96,16 @@ namespace WebUI.Areas.Identity.Pages.Account
                 UserName = Input.UserName,
                 Email = Input.Email
             };
-            var result = await _userManager.CreateAsync(user, Input.Password);
-            await _userManager.AddToRoleAsync(user, Role.User.ToString());
-            if (result.Succeeded)
+            var createUserResult = await _userManager.CreateAsync(user, Input.Password);
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, Role.User.ToString());
+            if (createUserResult.Succeeded && addToRoleResult.Succeeded)
             {
                 _logger.LogInformation($"User \"{user.UserName} \" created a new account with password.");
 
                 returnUrl ??= Url.Content("~/");
-                await SendConfirmationEmailAsync(returnUrl, user);
+                var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
+                EmailAddress emailAddress = new(user.FirstName, user.LastName, user.Email);
+                await _emailService.SendConfirmationEmailAsync(callbackUrl, emailAddress);
 
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {
@@ -113,7 +115,8 @@ namespace WebUI.Areas.Identity.Pages.Account
                 await _signInManager.SignInAsync(user, false);
                 return LocalRedirect(returnUrl);
             }
-            AddModelStateErrors(result);
+            AddModelStateErrors(createUserResult);
+            AddModelStateErrors(addToRoleResult);
 
             return Page();
         }
@@ -123,10 +126,10 @@ namespace WebUI.Areas.Identity.Pages.Account
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             return Url.Page(
-                "/Account/ConfirmEmail",
-                null,
-                new { area = "Identity", userId = user.Id, code, returnUrl },
-                Request.Scheme);
+                pageName: "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = user.Id, code, returnUrl },
+                protocol: Request.Scheme);
         }
 
         private void AddModelStateErrors(IdentityResult result)
@@ -135,15 +138,6 @@ namespace WebUI.Areas.Identity.Pages.Account
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-        }
-
-        private async Task SendConfirmationEmailAsync(string returnUrl, ApplicationUser user)
-        {
-            var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);
-            const string subject = "Confirm your email";
-            var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
-            var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
-            await _emailSender.SendEmailAsync(address, subject, htmlMessage);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
 
-namespace Infrastructure.Services.EmailSender
+namespace Infrastructure.Services.EmailService
 {
     public class EmailConfiguration : IEmailConfiguration
     {

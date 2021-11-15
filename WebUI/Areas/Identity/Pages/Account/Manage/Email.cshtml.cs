@@ -15,14 +15,14 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
     public class EmailModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailService _emailSender;
+        private readonly IEmailService _emailService;
 
         public EmailModel(
             UserManager<ApplicationUser> userManager,
-            IEmailService emailSender)
+            IEmailService emailService)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
+            _emailService = emailService;
         }
 
         public string Username { get; set; }
@@ -95,7 +95,8 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
                     pageHandler: null,
                     values: new { userId, email = Input.NewEmail, code },
                     protocol: Request.Scheme);
-                await SendConfirmationEmailAsync(callbackUrl, user);
+                var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
+                await _emailService.SendConfirmationEmailAsync(callbackUrl, address);
                 StatusMessage = "Confirmation link to change email sent. Please check your email.";
                 return RedirectToPage();
             }
@@ -127,18 +128,10 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { area = "Identity", userId, code },
                 protocol: Request.Scheme);
-            await SendConfirmationEmailAsync(callbackUrl, user);
+            var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
+            await _emailService.SendConfirmationEmailAsync(callbackUrl, address);
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();
-        }
-
-        private async Task SendConfirmationEmailAsync(string callbackUrl, ApplicationUser user)
-        {
-            var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
-            await _emailSender.SendEmailAsync(
-                address,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -9,10 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Application.Common.Interfaces;
-using Application.Common.Models;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -21,19 +19,19 @@ namespace WebUI.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailService _emailSender;
+        private readonly IEmailService _emailService;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailService emailSender)
+            IEmailService emailService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _emailService = emailService;
         }
 
         [BindProperty]
@@ -161,7 +159,8 @@ namespace WebUI.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId, code },
                             protocol: Request.Scheme);
 
-                        await SendConfirmationEmailAsync(callbackUrl, user);
+                        EmailAddress emailAddress = new(user.FirstName, user.LastName, user.Email);
+                        await _emailService.SendConfirmationEmailAsync(callbackUrl, emailAddress);
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -183,14 +182,6 @@ namespace WebUI.Areas.Identity.Pages.Account
             ProviderDisplayName = info.ProviderDisplayName;
             ReturnUrl = returnUrl;
             return Page();
-        }
-
-        private async Task SendConfirmationEmailAsync(string callbackUrl, ApplicationUser user)
-        {
-            const string subject = "Confirm your email";
-            var htmlMessage = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
-            var address = new EmailAddress(user.FirstName, user.LastName, user.Email);
-            await _emailSender.SendEmailAsync(address, subject, htmlMessage);
         }
     }
 }
