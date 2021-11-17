@@ -1,5 +1,6 @@
 using Application.Common;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,9 +29,18 @@ namespace WebApp
             });
 
             services.AddRazorPages();
-            services.AddMvc().AddRazorPagesOptions(opt => {
+            services.AddMvc().AddRazorPagesOptions(opt =>
+            {
                 opt.RootDirectory = "/Frontend/Pages";
             });
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    var googleAuthNSection = Configuration.GetSection("GoogleAuthentication");
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
 
             services.AddApplication();
             services.AddInfrastructure(Configuration);

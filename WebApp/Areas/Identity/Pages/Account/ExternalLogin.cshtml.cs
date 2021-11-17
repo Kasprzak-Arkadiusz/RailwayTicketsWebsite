@@ -7,11 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Serilog;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.Areas.Identity.Pages.Account;
+using WebApp.Backend;
 
 namespace WebApp.Areas.Identity.Pages.Account
 {
@@ -33,7 +32,7 @@ namespace WebApp.Areas.Identity.Pages.Account
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public RegisterInputModel Input { get; set; }
 
         public string ProviderDisplayName { get; set; }
 
@@ -41,29 +40,6 @@ namespace WebApp.Areas.Identity.Pages.Account
 
         [TempData]
         public string ErrorMessage { get; set; }
-
-        public class InputModel
-        {
-            [Required]
-            [Display(Name = "First name")]
-            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            public string FirstName { get; set; }
-
-            [Required]
-            [Display(Name = "Last name")]
-            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            public string LastName { get; set; }
-
-            [Required]
-            [Display(Name = "Username")]
-            [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            public string UserName { get; set; }
-
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
-        }
 
         public IActionResult OnGetAsync()
         {
@@ -112,9 +88,11 @@ namespace WebApp.Areas.Identity.Pages.Account
         {
             if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
             {
-                Input = new InputModel
+                Input = new RegisterInputModel
                 {
-                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
                 };
             }
         }
