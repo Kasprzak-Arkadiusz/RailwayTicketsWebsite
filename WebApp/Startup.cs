@@ -40,6 +40,12 @@ namespace WebApp
                     var googleAuthNSection = Configuration.GetSection("GoogleAuthentication");
                     options.ClientId = googleAuthNSection["ClientId"];
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
+                })
+                .AddMicrosoftAccount(options =>
+                {
+                    var microsoftSection = Configuration.GetSection("MicrosoftAuthentication");
+                    options.ClientId = microsoftSection["ClientId"];
+                    options.ClientSecret = microsoftSection["ClientSecret"];
                 });
 
             services.AddApplication();
