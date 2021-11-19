@@ -2,7 +2,6 @@ using Application.Common.Interfaces;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,10 +26,9 @@ namespace WebApp
                 {
                     var services = scope.ServiceProvider;
                     var context = services.GetRequiredService<IApplicationDbContext>();
-                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var identityService = services.GetRequiredService<IIdentityService>();
 
-                    var identitySeed = new IdentitySeed(userManager, roleManager);
+                    var identitySeed = new IdentitySeed(identityService);
                     await identitySeed.Seed();
                     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
                 }

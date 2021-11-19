@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,17 +12,20 @@ namespace Infrastructure.Identity
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
         private readonly IAuthorizationService _authorizationService;
 
         public IdentityService(
             UserManager<ApplicationUser> userManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService, 
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
             _authorizationService = authorizationService;
+            _roleManager = roleManager;
         }
 
         public async Task<string> GetUserNameAsync(string userId)
@@ -49,23 +53,47 @@ namespace Infrastructure.Identity
             return result.Succeeded;
         }
 
-        public async Task<Result> DeleteUserAsync(string userId)
+        public async Task<Result> EnsureUserIsInRoleAsync(string userId, string role)
         {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
-
-            if (user != null)
+            if (!await _roleManager.RoleExistsAsync(role))
             {
-                return await DeleteUserAsync(user);
+                await _roleManager.CreateAsync(new IdentityRole(role));
             }
 
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return Result.Failure(new[] { "Couldn't find a user with provided id." });
+            }
+
+            await _userManager.AddToRoleAsync(user, role);
             return Result.Success();
         }
 
-        private async Task<Result> DeleteUserAsync(ApplicationUser user)
+        public async Task<string> CreateUserAsync(ApplicationUserParams userParams, string password)
         {
-            var result = await _userManager.DeleteAsync(user);
+            var userToFind = await _userManager.FindByEmailAsync(userParams.Email);
 
-            return result.ToApplicationResult();
+            if (userToFind == null)
+            {
+                userToFind = new ApplicationUser
+                {
+                    FirstName = userParams.FirstName,
+                    LastName = userParams.LastName,
+                    UserName = userParams.UserName,
+                    Email = userParams.Email,
+                    EmailConfirmed = userParams.EmailConfirmed,
+                    PhoneNumberConfirmed = userParams.PhoneNumberConfirmed
+                };
+                await _userManager.CreateAsync(userToFind, password);
+            }
+
+            if (userToFind == null)
+            {
+                throw new Exception("User couldn't be created.");
+            }
+
+            return userToFind.Id;
         }
     }
 }

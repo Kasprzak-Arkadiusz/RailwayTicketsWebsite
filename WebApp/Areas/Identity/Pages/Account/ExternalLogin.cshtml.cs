@@ -11,7 +11,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebApp.Areas.Identity.Models;
-using WebApp.Backend;
 
 namespace WebApp.Areas.Identity.Pages.Account
 {
@@ -81,21 +80,18 @@ namespace WebApp.Areas.Identity.Pages.Account
             // If the user does not have an account, then ask the user to create an account.
             ReturnUrl = returnUrl;
             ProviderDisplayName = info.ProviderDisplayName;
-            FillEmail(info);
+            FillRegisterData(info);
             return Page();
         }
 
-        private void FillEmail(ExternalLoginInfo info)
+        private void FillRegisterData(ExternalLoginInfo info)
         {
-            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+            Input = new RegisterInputModel
             {
-                Input = new RegisterInputModel
-                {
-                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
-                };
-            }
+                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
+            };
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
@@ -139,7 +135,6 @@ namespace WebApp.Areas.Identity.Pages.Account
                         EmailAddress emailAddress = new(user.FirstName, user.LastName, user.Email);
                         await _emailService.SendConfirmationEmailAsync(callbackUrl, emailAddress);
 
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
                             return RedirectToPage("./RegisterConfirmation", new { Input.Email });

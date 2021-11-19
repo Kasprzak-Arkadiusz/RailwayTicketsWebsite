@@ -11,6 +11,8 @@ namespace Application.Common.Interfaces
 
         Task<bool> AuthorizeAsync(string userId, string policyName);
 
-        Task<Result> DeleteUserAsync(string userId);
+        Task<Result> EnsureUserIsInRoleAsync(string userId, string role);
+
+        Task<string> CreateUserAsync(ApplicationUserParams user, string password);
     }
 }

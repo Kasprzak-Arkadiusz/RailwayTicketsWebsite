@@ -1,7 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Enums;
 using Infrastructure.Identity;
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApp.Areas.Identity.Models;
-using WebApp.Backend;
 
 namespace WebApp.Areas.Identity.Pages.Account
 {

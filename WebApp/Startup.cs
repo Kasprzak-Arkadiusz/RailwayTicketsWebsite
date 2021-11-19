@@ -1,6 +1,5 @@
 using Application.Common;
 using Infrastructure;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +46,8 @@ namespace WebApp
                     options.ClientId = microsoftSection["ClientId"];
                     options.ClientSecret = microsoftSection["ClientSecret"];
                 });
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddApplication();
             services.AddInfrastructure(Configuration);

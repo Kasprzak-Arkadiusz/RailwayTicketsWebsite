@@ -1,22 +1,17 @@
-﻿using Domain.Enums;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
+using Infrastructure.Identity.Enums;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Identity
 {
     public class IdentitySeed
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IIdentityService _identityService;
 
-        public IdentitySeed(
-            UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+        public IdentitySeed(IIdentityService identityService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _identityService = identityService;
         }
 
         public async Task Seed()
@@ -28,7 +23,7 @@ namespace Infrastructure.Identity
 
         private async Task CreateAdminAccount()
         {
-            var user = new ApplicationUser
+            var user = new ApplicationUserParams
             {
                 FirstName = "John",
                 LastName = "Foe",
@@ -38,16 +33,16 @@ namespace Infrastructure.Identity
                 PhoneNumberConfirmed = true
             };
 
-            var userId = await CreateUser(user, "sYd&jDc@VU5ZVFn!");
+            var userId = await _identityService.CreateUserAsync(user, "sYd&jDc@VU5ZVFn!");
 
-            await EnsureRole(userId, Role.Admin.ToString());
-            await EnsureRole(userId, Role.Employee.ToString());
-            await EnsureRole(userId, Role.User.ToString());
+            await _identityService.EnsureUserIsInRoleAsync(userId, Role.Admin.ToString());
+            await _identityService.EnsureUserIsInRoleAsync(userId, Role.Employee.ToString());
+            await _identityService.EnsureUserIsInRoleAsync(userId, Role.User.ToString());
         }
 
         private async Task CreateEmployeeAccount()
         {
-            var user = new ApplicationUser
+            var user = new ApplicationUserParams
             {
                 FirstName = "Emily",
                 LastName = "Smith",
@@ -57,14 +52,13 @@ namespace Infrastructure.Identity
                 PhoneNumberConfirmed = true
             };
 
-            var userId = await CreateUser(user, "4YDaZf@onq^7FxqH");
-
-            await EnsureRole(userId, Role.Employee.ToString());
+            var userId = await _identityService.CreateUserAsync(user, "4YDaZf@onq^7FxqH");
+            await _identityService.EnsureUserIsInRoleAsync(userId, Role.Employee.ToString());
         }
 
         private async Task CreateUserAccount()
         {
-            var user = new ApplicationUser
+            var user = new ApplicationUserParams
             {
                 FirstName = "William",
                 LastName = "Johnson",
@@ -74,44 +68,8 @@ namespace Infrastructure.Identity
                 PhoneNumberConfirmed = true
             };
 
-            var userId = await CreateUser(user, "7&HjLDhW!ikDhQHJ");
-
-            await EnsureRole(userId, Role.User.ToString());
-        }
-
-        private async Task<string> CreateUser(ApplicationUser user, string password)
-        {
-            var userToFind = await _userManager.FindByNameAsync(user.UserName);
-
-            if (userToFind == null)
-            {
-                userToFind = user;
-                await _userManager.CreateAsync(userToFind, password);
-            }
-
-            if (userToFind == null)
-            {
-                throw new Exception("User couldn't be created.");
-            }
-
-            return userToFind.Id;
-        }
-
-        private async Task EnsureRole(string userId, string role)
-        {
-            if (!await _roleManager.RoleExistsAsync(role))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(role));
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                throw new Exception("Couldn't find a user with provided id.");
-            }
-
-            await _userManager.AddToRoleAsync(user, role);
+            var userId = await _identityService.CreateUserAsync(user, "7&HjLDhW!ikDhQHJ");
+            await _identityService.EnsureUserIsInRoleAsync(userId, Role.User.ToString());
         }
     }
 }

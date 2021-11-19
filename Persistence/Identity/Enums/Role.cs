@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+﻿namespace Infrastructure.Identity.Enums
 {
     public enum Role
     {
