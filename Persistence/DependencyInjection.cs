@@ -1,4 +1,6 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Reflection;
+using Application.Common.Interfaces;
+using Application.Common.Models;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Services.EmailService;
@@ -11,7 +13,7 @@ namespace Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -36,6 +38,16 @@ namespace Infrastructure
 
             services.AddSingleton<IEmailConfiguration>(configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddTransient<IEmailService, EmailService>();
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ApplicationUserParams, ApplicationUser>();
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+
+            return services;
         }
     }
 }

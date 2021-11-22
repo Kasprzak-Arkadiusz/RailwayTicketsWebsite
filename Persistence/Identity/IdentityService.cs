@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace Infrastructure.Identity
 {
     public class IdentityService : IIdentityService
     {
+        private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
@@ -20,12 +22,14 @@ namespace Infrastructure.Identity
             UserManager<ApplicationUser> userManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
             IAuthorizationService authorizationService, 
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IMapper mapper)
         {
             _userManager = userManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
             _authorizationService = authorizationService;
             _roleManager = roleManager;
+            _mapper = mapper;
         }
 
         public async Task<string> GetUserNameAsync(string userId)
@@ -76,15 +80,7 @@ namespace Infrastructure.Identity
 
             if (userToFind == null)
             {
-                userToFind = new ApplicationUser
-                {
-                    FirstName = userParams.FirstName,
-                    LastName = userParams.LastName,
-                    UserName = userParams.UserName,
-                    Email = userParams.Email,
-                    EmailConfirmed = userParams.EmailConfirmed,
-                    PhoneNumberConfirmed = userParams.PhoneNumberConfirmed
-                };
+                userToFind = _mapper.Map<ApplicationUser>(userParams);
                 await _userManager.CreateAsync(userToFind, password);
             }
 
