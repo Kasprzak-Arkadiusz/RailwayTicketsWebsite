@@ -1,0 +1,16 @@
+﻿[class^="form-group"], [class*=" form-group"] {
+    text-align: center;
+}
+
+[class^="form-control"], [class*=" form-control"] {
+    text-align: center;
+}
+
+table {
+    text-align: center;
+    margin: 10px;
+}
+
+label {
+    font-weight: bold;
+}

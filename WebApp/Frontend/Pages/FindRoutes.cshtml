@@ -1,0 +1,61 @@
+﻿@page
+@inject IHttpClientFactory _clientFactory
+@using System.Net.Http
+@using Microsoft.EntityFrameworkCore
+@model WebApp.Frontend.Pages.FindRoutesModel
+@{
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.From" class="col-form-label"></label>
+                <input asp-for="Input.From" class="form-control" placeholder="Enter the name of station"/>
+                <span asp-validation-for="Input.From" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.To" class="col-form-label"></label>
+                <input asp-for="Input.To" class="form-control" placeholder="Enter the name of station"/>
+                <span asp-validation-for="Input.To" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.DepartureTime" class="col-form-label"></label>
+                <input asp-for="Input.DepartureTime" class="form-control" value="@DateTime.Now.ToString("HH:mm")"/>
+                <span asp-validation-for="Input.DepartureTime" class="text-danger"></span>
+            </div>
+            <div class="form-group container" style="text-align: center">
+                <input type="submit" value="Find routes"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Starting station</th>
+            <th>Final station</th>
+            <th>Departure time</th>
+            <th>Arrival Time</th>
+            <th>Train identifier</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Routes)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.StartingStation)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FinalStation)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DepartureTime.TimeOfDay)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ArrivalTime.TimeOfDay)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TrainId)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

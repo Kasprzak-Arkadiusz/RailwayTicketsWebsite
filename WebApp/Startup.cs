@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using Microsoft.Net.Http.Headers;
+using MimeKit;
 
 namespace WebApp
 {
@@ -27,7 +30,16 @@ namespace WebApp
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApp", Version = "v1" });
             });
 
-            services.AddRazorPages();
+            services.AddHttpClient("api", c =>
+            {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("ApiUrl"));
+                c.DefaultRequestHeaders.Add(
+                    HeaderNames.Accept, "*/*");
+                c.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+                c.DefaultRequestHeaders.Add("Keep-Alive", "3600");
+            });
+
+            services.AddRazorPages().AddRazorRuntimeCompilation();;
             services.AddMvc().AddRazorPagesOptions(opt =>
             {
                 opt.RootDirectory = "/Frontend/Pages";
