@@ -10,5 +10,6 @@ namespace Application.Common.DTOs
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         public bool IsOnHold { get; set; }
+        public short TrainId { get; set; }
     }
 }

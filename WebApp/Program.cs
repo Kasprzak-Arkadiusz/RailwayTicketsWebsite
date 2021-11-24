@@ -30,7 +30,7 @@ namespace WebApp
 
                     var identitySeed = new IdentitySeed(identityService);
                     await identitySeed.Seed();
-                    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                    await ApplicationDbContextSeed.SeedSampleDataAsync(context, identityService);
                 }
                 catch (Exception ex)
                 {

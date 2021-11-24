@@ -22,13 +22,6 @@ namespace Infrastructure.Persistence.Configuration
             builder.Property(rt => rt.PersonalReasonOfReturn)
                 .HasMaxLength(200)
                 .HasColumnName("personalReasonOfReturn");
-
-            builder.Property(rt => rt.Ticket).HasColumnName("ticket");
-
-            builder.HasOne(d => d.TicketNavigation)
-                .WithMany(p => p.ReturnedTickets)
-                .HasForeignKey(d => d.Ticket)
-                .HasConstraintName("fk_ReturnedTickets_Tickets");
         }
     }
 }

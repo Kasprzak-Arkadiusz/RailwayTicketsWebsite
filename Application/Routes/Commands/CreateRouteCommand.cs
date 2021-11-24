@@ -1,6 +1,9 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Converters;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,11 +11,12 @@ namespace Application.Routes.Commands
 {
     public class CreateRouteCommand : IRequest<int>
     {
-        public int StartingStation { get; set; }
-        public int FinalStation { get; set; }
-        public short DepartureTimeInMinutesPastMidnight { get; set; }
-        public short ArrivalTimeInMinutesPastMidnight { get; set; }
+        public DateTime DepartureTime { get; set; }
+        public DateTime ArrivalTime { get; set; }
         public bool IsOnHold { get; set; }
+        public string StartingStationName { get; set; }
+        public string FinalStationName { get; set; }
+        public short TrainId { get; set; }
     }
 
     public class CreateRouteCommandHandler : IRequestHandler<CreateRouteCommand, int>
@@ -28,11 +32,15 @@ namespace Application.Routes.Commands
         {
             var entity = new Route
             {
-                StartingStation = 1,
-                FinalStation = 2,
-                DepartureTimeInMinutesPastMidnight = request.DepartureTimeInMinutesPastMidnight,
-                ArrivalTimeInMinutesPastMidnight = request.ArrivalTimeInMinutesPastMidnight,
-                IsOnHold = request.IsOnHold
+                DepartureTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.DepartureTime),
+                ArrivalTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.ArrivalTime),
+                IsOnHold = request.IsOnHold,
+                StartingStation = await _context.Stations.SingleAsync(
+                    s => s.Name == request.StartingStationName, cancellationToken),
+                FinalStation = await _context.Stations.SingleAsync(
+                s => s.Name == request.FinalStationName, cancellationToken),
+                Train = await _context.Trains.SingleAsync(
+                    t => t.TrainId == request.TrainId, cancellationToken)
             };
 
             await _context.Routes.AddAsync(entity, cancellationToken);

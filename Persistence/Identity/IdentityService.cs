@@ -39,6 +39,12 @@ namespace Infrastructure.Identity
             return user.UserName;
         }
 
+        public async Task<string> GetUserIdByUserName(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            return user.Id;
+        }
+
         public async Task<bool> IsInRoleAsync(string userId, string role)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);

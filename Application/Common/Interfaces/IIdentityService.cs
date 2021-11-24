@@ -6,6 +6,7 @@ namespace Application.Common.Interfaces
     public interface IIdentityService
     {
         Task<string> GetUserNameAsync(string userId);
+        Task<string> GetUserIdByUserName(string userName);
 
         Task<bool> IsInRoleAsync(string userId, string role);
 

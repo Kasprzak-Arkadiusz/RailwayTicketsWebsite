@@ -1,12 +1,11 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Common.Converters;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Converters;
 
 namespace Application.Routes.Queries
 {
@@ -18,12 +17,10 @@ namespace Application.Routes.Queries
     public class GetRouteByIdQueryHandler : IRequestHandler<GetRouteByIdQuery, RouteDto>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
-        public GetRouteByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetRouteByIdQueryHandler(IApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<RouteDto> Handle(GetRouteByIdQuery request, CancellationToken cancellationToken)
@@ -33,13 +30,13 @@ namespace Application.Routes.Queries
                 .Select(route => new RouteDto
                 {
                     Id = route.Id,
-                    StartingStation = route.StartingStationNavigation.Name,
-                    FinalStation = route.FinalStationNavigation.Name,
+                    StartingStation = route.StartingStation.Name,
+                    FinalStation = route.FinalStation.Name,
                     ArrivalTime = ShortToDateTimeConverter.Convert(route.ArrivalTimeInMinutesPastMidnight),
                     DepartureTime = ShortToDateTimeConverter.Convert(route.DepartureTimeInMinutesPastMidnight),
-                    IsOnHold = route.IsOnHold
-                })
-                .FirstOrDefaultAsync(cancellationToken);
+                    IsOnHold = route.IsOnHold,
+                    TrainId = route.Train.TrainId
+                }).FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

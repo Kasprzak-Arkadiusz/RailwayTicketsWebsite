@@ -6,20 +6,12 @@ namespace Domain.Entities
 {
     public class Ticket : BaseEntity
     {
-        public Ticket()
-        {
-            ReturnedTickets = new HashSet<ReturnedTicket>();
-        }
-
-        public int Owner { get; set; }
-        public int Route { get; set; }
+        public string OwnerId { get; set; }
         public DateTime DayOfDeparture { get; set; }
-        public int Seat { get; set; }
-        public int Train { get; set; }
 
-        public virtual Route RouteNavigation { get; set; }
-        public virtual Seat SeatNavigation { get; set; }
-        public virtual Train TrainNavigation { get; set; }
-        public virtual ICollection<ReturnedTicket> ReturnedTickets { get; set; }
+        public Route Route { get; set; }
+        public Seat Seat { get; set; }
+        public Train Train { get; set; }
+        public ICollection<ReturnedTicket> ReturnedTickets { get; set; }
     }
 }

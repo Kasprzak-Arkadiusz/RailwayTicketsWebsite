@@ -4,14 +4,16 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class TrainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211123155750_RefactorEntities")]
+    partial class RefactorEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,8 +113,8 @@ namespace Persistence.Migrations
                         .HasColumnName("isFree")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<short>("Number")
-                        .HasColumnType("smallint")
+                    b.Property<byte>("Number")
+                        .HasColumnType("tinyint")
                         .HasColumnName("number");
 
                     b.Property<int?>("TrainId")

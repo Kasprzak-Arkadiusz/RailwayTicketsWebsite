@@ -2,9 +2,9 @@
 
 namespace Application.Common.Converters
 {
-    public static class ShortToDateTimeConverter
+    internal static class ShortToDateTimeConverter
     {
-        public static DateTime Convert(short source)
+        internal static DateTime Convert(short source)
         {
             var dateNow = DateTime.Now;
             var hour = source / 60;

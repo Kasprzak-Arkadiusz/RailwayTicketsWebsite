@@ -1,16 +1,16 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Common.Interfaces;
 
 namespace Infrastructure.Persistence
 {
     public static class ApplicationDbContextSeed
     {
-        public static async Task SeedSampleDataAsync(IApplicationDbContext context)
+        public static async Task SeedSampleDataAsync(IApplicationDbContext context, IIdentityService identityService)
         {
             if (!context.Stations.Any())
             {
@@ -54,9 +54,9 @@ namespace Infrastructure.Persistence
                     {
                         seats.Add(new Seat
                         {
-                            Train = train.Id,
-                            Car = (byte)((i / numberOfSeatsInCar ) + 1),
-                            Number = (byte)(i + 1),
+                            Train = train,
+                            Car = (byte)(i / numberOfSeatsInCar + 1),
+                            Number = (short)(i + 1),
                             IsFree = true
                         });
                     }
@@ -67,56 +67,60 @@ namespace Infrastructure.Persistence
                 context.Routes.AddRange(
                     new Route
                     {
-                        StartingStation = stations[0].Id,
-                        FinalStation = stations[1].Id,
+                        StartingStation = stations[0],
+                        FinalStation = stations[1],
                         DepartureTimeInMinutesPastMidnight = 480,
                         ArrivalTimeInMinutesPastMidnight = 780,
-                        IsOnHold = false
+                        IsOnHold = false,
+                        Train = trains[0]
                     },
                     new Route
                     {
-                        StartingStation = stations[2].Id,
-                        FinalStation = stations[3].Id,
+                        StartingStation = stations[2],
+                        FinalStation = stations[3],
                         DepartureTimeInMinutesPastMidnight = 720,
                         ArrivalTimeInMinutesPastMidnight = 1020,
-                        IsOnHold = false
+                        IsOnHold = false,
+                        Train = trains[1]
                     },
                     new Route
                     {
-                        StartingStation = stations[4].Id,
-                        FinalStation = stations[5].Id,
+                        StartingStation = stations[4],
+                        FinalStation = stations[5],
                         DepartureTimeInMinutesPastMidnight = 1200,
                         ArrivalTimeInMinutesPastMidnight = 60,
-                        IsOnHold = true
+                        IsOnHold = true,
+                        Train = trains[2]
                     });
                 await context.SaveChangesAsync();
 
                 var routes = await context.Routes.ToListAsync();
-                //Change Owner Id when Identity users will be implemented
+                var userId = await identityService.GetUserIdByUserName("justAnUser");
+
                 context.Tickets.AddRange(
                     new Ticket
                     {
-                        Owner = 1,
+                        OwnerId = userId,
                         DayOfDeparture = DateTime.Now,
-                        Route = routes[0].Id,
-                        Train = trains[0].Id,
-                        Seat = 64
+                        Route = routes[0],
+                        Train = trains[0],
+                        Seat = seats.SingleOrDefault(s => s.Train == trains[0] && s.Number == 64)
                     },
                     new Ticket
                     {
-                        Owner = 2,
+                        OwnerId = userId,
                         DayOfDeparture = new DateTime(2021, 12, 20),
-                        Route = routes[1].Id,
-                        Train = trains[1].Id,
-                        Seat = 1
+                        Route = routes[1],
+                        Train = trains[1],
+                        Seat = seats.SingleOrDefault(s => s.Train == trains[1] && s.Number == 1)
                     },
                     new Ticket
                     {
-                        Owner = 3,
+                        OwnerId = userId,
                         DayOfDeparture = new DateTime(2021, 12, 6),
-                        Route = routes[2].Id,
-                        Train = trains[2].Id,
-                        Seat = 240
+                        Route = routes[2],
+                        Train = trains[2],
+                        Seat = seats.SingleOrDefault(s => s.Train == trains[2] && s.Number == 240)
                     });
                 await context.SaveChangesAsync();
 
@@ -125,7 +129,7 @@ namespace Infrastructure.Persistence
                 context.ReturnedTickets.AddRange(
                     new ReturnedTicket
                     {
-                        Ticket = tickets[1].Id,
+                        Ticket = tickets[1],
                         DateOfReturn = new DateTime(2021, 11, 6),
                         GenericReasonOfReturn = "The reason for my ride is no longer valid.",
                         PersonalReasonOfReturn = "Due to change in my personal affairs i don't see point in traveling by train."

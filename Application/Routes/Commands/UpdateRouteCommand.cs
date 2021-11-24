@@ -1,17 +1,23 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Converters;
+using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Exceptions;
 
 namespace Application.Routes.Commands
 {
     public class UpdateRouteCommand : IRequest
     {
         public int Id { get; set; }
-        public short DepartureTimeInMinutesPastMidnight { get; set; }
-        public short ArrivalTimeInMinutesPastMidnight { get; set; }
+        public DateTime DepartureTime { get; set; }
+        public DateTime ArrivalTime { get; set; }
         public bool IsOnHold { get; set; }
+        public string StartingStationName { get; set; }
+        public string FinalStationName { get; set; }
+        public short TrainId { get; set; }
     }
 
     public class UpdateRouteCommandHandler : IRequestHandler<UpdateRouteCommand>
@@ -32,9 +38,15 @@ namespace Application.Routes.Commands
                 throw new NotFoundException(nameof(entity), request.Id);
             }
 
-            entity.DepartureTimeInMinutesPastMidnight = request.DepartureTimeInMinutesPastMidnight;
-            entity.ArrivalTimeInMinutesPastMidnight = request.ArrivalTimeInMinutesPastMidnight;
+            entity.DepartureTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.DepartureTime);
+            entity.ArrivalTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.ArrivalTime);
             entity.IsOnHold = request.IsOnHold;
+            entity.StartingStation = await _context.Stations.SingleAsync(
+                s => s.Name == request.StartingStationName, cancellationToken);
+            entity.FinalStation = await _context.Stations.SingleAsync(
+                s => s.Name == request.FinalStationName, cancellationToken);
+            entity.Train = await _context.Trains.SingleAsync(
+                t => t.TrainId == request.TrainId, cancellationToken);
 
             await _context.SaveChangesAsync();
 

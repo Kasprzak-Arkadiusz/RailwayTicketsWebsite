@@ -19,11 +19,8 @@ namespace Infrastructure.Persistence.Configuration
 
             builder.Property(s => s.Number).HasColumnName("number");
 
-            builder.Property(s => s.Train).HasColumnName("train");
-
-            builder.HasOne(d => d.TrainNavigation)
+            builder.HasOne(d => d.Train)
                 .WithMany(p => p.Seats)
-                .HasForeignKey(d => d.Train)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Seats_Trains");
         }
