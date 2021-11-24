@@ -40,6 +40,7 @@ namespace WebApp.Frontend.Pages
         public async Task OnGetAsync()
         {
             var client = _httpClientFactory.CreateClient("api");
+
             var httpResponseMessage = await client.GetAsync("Route");
 
             if (httpResponseMessage.IsSuccessStatusCode)
@@ -48,11 +49,33 @@ namespace WebApp.Frontend.Pages
             }
         }
 
+        private bool SearchParamsAreEmpty()
+        {
+            return Input is null ||
+                   Input.From is null &&
+                   Input.To is null &&
+                   Input.DepartureTime == DateTime.MinValue;
+        }
+
         public async Task OnPost()
         {
             if (!ModelState.IsValid)
             {
                 return;
+            }
+
+            var client = _httpClientFactory.CreateClient("api");
+            var uriBuilder = new UriBuilder(client.BaseAddress + "Route/search")
+            {
+                Query = Uri.EscapeUriString(
+                    $"startingStationName={Input.From}&finalStationName={Input.To}&departureTime={Input.DepartureTime:O}")
+            };
+
+            var httpResponseMessage = await client.GetAsync("Route/search");
+
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                Routes = await client.GetFromJsonAsync<IEnumerable<RouteDto>>(uriBuilder.Uri);
             }
         }
     }
