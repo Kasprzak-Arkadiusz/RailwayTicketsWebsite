@@ -1,0 +1,51 @@
+﻿@page
+@model WebApp.Frontend.Pages.Routes.CreateModel
+
+<h4>Creating a new Route</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label>Departure time:</label>
+                <input asp-for="Route.DepartureTime" type="time" asp-format="{0:HH:mm}" class="form-control"/>
+                <span asp-validation-for="Route.DepartureTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Arrival time:</label>
+                <input asp-for="Route.ArrivalTime" type="time" asp-format="{0:HH:mm}" class="form-control"/>
+                <span asp-validation-for="Route.ArrivalTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>From:</label>
+                <input asp-for="Route.StartingStation" class="form-control" />
+                <span asp-validation-for="Route.StartingStation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>To:</label>
+                <input asp-for="Route.FinalStation" class="form-control" />
+                <span asp-validation-for="Route.FinalStation" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Route.IsOnHold" /> 
+                    @Html.DisplayName("Is on hold?")
+                </label>
+            </div>
+            <input type="hidden" asp-for="Route.Id" />
+            <div class="form-group">
+                <a class="btn btn-secondary" asp-page="/Routes/FindRoutes">Back to List</a> 
+                <input type="submit" value="Create" class="btn btn-success"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("../Shared/_ValidationScriptsPartial.cshtml");}
+}

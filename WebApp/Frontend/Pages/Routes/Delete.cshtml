@@ -1,0 +1,53 @@
+﻿@page
+@model WebApp.Frontend.Pages.Routes.DeleteModel
+
+<h3>Deleting the route</h3>
+<hr />
+
+<h5 class="font-weight-bold">Are you sure you want to delete this route?</h5>
+<div class="justify-content-md-center">
+    
+    <div class="row justify-content-center">
+        <b class="col-sm-2">
+            @Html.DisplayName("Departure time:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Route.DepartureTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Arrival time:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Route.ArrivalTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("From:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Route.StartingStation)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("To:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Route.FinalStation)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Is on hold?")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Route.IsOnHold)
+        </div>
+        <div class="w-100"></div>
+    </div>
+    
+    <form method="post" class="container" style="margin-top: 1rem">
+        <input type="hidden" asp-for="Route.Id" />
+        <a class="btn btn-secondary"  asp-page="/Routes/FindRoutes">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
+</div>

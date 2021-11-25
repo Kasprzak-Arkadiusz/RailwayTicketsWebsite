@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace WebApp.Frontend.Pages
+namespace WebApp.Frontend.Pages.Routes
 {
     public class FindRoutesModel : PageModel
     {
@@ -32,6 +32,7 @@ namespace WebApp.Frontend.Pages
             [Required]
             public string To { get; init; }
 
+            [Required]
             [DataType(DataType.Time)]
             [DisplayFormat(DataFormatString = "{0:HH:mm}")]
             public DateTime DepartureTime { get; init; }
@@ -41,20 +42,13 @@ namespace WebApp.Frontend.Pages
         {
             var client = _httpClientFactory.CreateClient("api");
 
-            var httpResponseMessage = await client.GetAsync("Route");
+            const string actionPath = "Route";
+            var httpResponseMessage = await client.GetAsync(actionPath);
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Routes = await client.GetFromJsonAsync<IEnumerable<RouteDto>>("Route");
+                Routes = await client.GetFromJsonAsync<IEnumerable<RouteDto>>(actionPath);
             }
-        }
-
-        private bool SearchParamsAreEmpty()
-        {
-            return Input is null ||
-                   Input.From is null &&
-                   Input.To is null &&
-                   Input.DepartureTime == DateTime.MinValue;
         }
 
         public async Task OnPost()
@@ -65,13 +59,14 @@ namespace WebApp.Frontend.Pages
             }
 
             var client = _httpClientFactory.CreateClient("api");
-            var uriBuilder = new UriBuilder(client.BaseAddress + "Route/search")
+            const string actionPath = "Route/search";
+            var uriBuilder = new UriBuilder(client.BaseAddress + actionPath)
             {
                 Query = Uri.EscapeUriString(
                     $"startingStationName={Input.From}&finalStationName={Input.To}&departureTime={Input.DepartureTime:O}")
             };
 
-            var httpResponseMessage = await client.GetAsync("Route/search");
+            var httpResponseMessage = await client.GetAsync(actionPath);
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {

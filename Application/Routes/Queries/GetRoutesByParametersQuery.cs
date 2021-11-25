@@ -26,6 +26,7 @@ namespace Application.Routes.Queries
         {
             _context = context;
         }
+        //TODO Return only routes that are not on hold
         public async Task<IEnumerable<RouteDto>> Handle(GetRoutesByParametersQuery request, CancellationToken cancellationToken)
         {
             var queryBuilder = _context.Routes.AsQueryable();
