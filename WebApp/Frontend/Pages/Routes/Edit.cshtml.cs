@@ -1,21 +1,13 @@
 ﻿using Application.Common.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.Routes
 {
-    public class EditModel : PageModel
+    public class EditModel : BasePageModel
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public EditModel(IHttpClientFactory httpClientFactory)
-        {
-            _httpClientFactory = httpClientFactory;
-        }
-
         [BindProperty]
         public RouteDto Route { get; set; }
 
@@ -26,7 +18,7 @@ namespace WebApp.Frontend.Pages.Routes
                 return NotFound();
             }
 
-            var client = _httpClientFactory.CreateClient("api");
+            var client = HttpClientFactory.CreateClient("api");
             var actionPath = $"Route/{id}";
             var httpResponseMessage = await client.GetAsync(actionPath);
 

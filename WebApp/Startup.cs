@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System;
-using Microsoft.Net.Http.Headers;
-using MimeKit;
 
 namespace WebApp
 {
@@ -39,7 +38,7 @@ namespace WebApp
                 c.DefaultRequestHeaders.Add("Keep-Alive", "3600");
             });
 
-            services.AddRazorPages().AddRazorRuntimeCompilation();;
+            services.AddRazorPages().AddRazorRuntimeCompilation(); ;
             services.AddMvc().AddRazorPagesOptions(opt =>
             {
                 opt.RootDirectory = "/Frontend/Pages";
@@ -59,7 +58,7 @@ namespace WebApp
                     options.ClientSecret = microsoftSection["ClientSecret"];
                 });
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddApplication();
             services.AddInfrastructure(Configuration);

@@ -18,13 +18,13 @@
                 <span asp-validation-for="Route.ArrivalTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>From:</label>
-                <input asp-for="Route.StartingStation" class="form-control" />
+                <label class="container">From:</label>
+                <select asp-items="Model.StartingStations" name="From"> </select>
                 <span asp-validation-for="Route.StartingStation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>To:</label>
-                <input asp-for="Route.FinalStation" class="form-control" />
+                <label class="container">To:</label>
+                <select asp-items="Model.DepartureStations" name="To"> </select>
                 <span asp-validation-for="Route.FinalStation" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -33,17 +33,13 @@
                     @Html.DisplayName("Is on hold?")
                 </label>
             </div>
-            <input type="hidden" asp-for="Route.Id" />
+            @Html.Hidden("Route.Id", Model.Route?.Id ?? 0)
             <div class="form-group">
                 <a class="btn btn-secondary" asp-page="/Routes/FindRoutes">Back to List</a> 
                 <input type="submit" value="Create" class="btn btn-success"/>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

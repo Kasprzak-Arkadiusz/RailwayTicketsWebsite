@@ -35,7 +35,7 @@ namespace Application.Routes.Queries
                 TrainId = route.Train.TrainId
             }).ToListAsync(cancellationToken);
 
-            return routes?.AsReadOnly();
+            return routes.AsReadOnly();
         }
     }
 }

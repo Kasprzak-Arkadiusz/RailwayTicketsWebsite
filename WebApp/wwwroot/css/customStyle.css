@@ -6,6 +6,10 @@ table {
     margin: 10px;
 }
 
+input {
+    text-align: center;
+}
+
 label {
     font-weight: bold;
 }

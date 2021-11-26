@@ -39,14 +39,6 @@ namespace Infrastructure
             services.AddSingleton<IEmailConfiguration>(configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddTransient<IEmailService, EmailService>();
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            var config = new AutoMapper.MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<ApplicationUserParams, ApplicationUser>();
-            });
-            var mapper = config.CreateMapper();
-            services.AddSingleton(mapper);
-
             return services;
         }
     }

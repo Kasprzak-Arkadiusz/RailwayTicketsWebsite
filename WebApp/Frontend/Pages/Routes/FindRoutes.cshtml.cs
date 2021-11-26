@@ -1,24 +1,16 @@
 using Application.Common.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.Routes
 {
-    public class FindRoutesModel : PageModel
+    public class FindRoutesModel : BasePageModel
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public FindRoutesModel(IHttpClientFactory httpClientFactory)
-        {
-            _httpClientFactory = httpClientFactory;
-        }
-
         [BindProperty]
         public InputModel Input { get; init; }
 
@@ -40,7 +32,7 @@ namespace WebApp.Frontend.Pages.Routes
 
         public async Task OnGetAsync()
         {
-            var client = _httpClientFactory.CreateClient("api");
+            var client = HttpClientFactory.CreateClient("api");
 
             const string actionPath = "Route";
             var httpResponseMessage = await client.GetAsync(actionPath);
@@ -58,7 +50,7 @@ namespace WebApp.Frontend.Pages.Routes
                 return;
             }
 
-            var client = _httpClientFactory.CreateClient("api");
+            var client = HttpClientFactory.CreateClient("api");
             const string actionPath = "Route/search";
             var uriBuilder = new UriBuilder(client.BaseAddress + actionPath)
             {

@@ -9,7 +9,7 @@ namespace WebApp.Backend.Controllers
     public class RouteController : BaseApiController
     {
         [HttpPost]
-        public async Task<IActionResult> Create(CreateRouteCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateRouteCommand command)
         {
             return Ok(await Mediator.Send(command));
         }
