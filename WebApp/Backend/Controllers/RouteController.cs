@@ -32,8 +32,8 @@ namespace WebApp.Backend.Controllers
         {
             return Ok(await Mediator.Send(new GetRoutesByParametersQuery
             {
-                StartingStationName = startingStationName,
-                FinalStationName = finalStationName,
+                StartingStation = startingStationName,
+                FinalStation = finalStationName,
                 DepartureTime = departureTime
             }));
         }
@@ -45,7 +45,7 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateRouteCommand command)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateRouteCommand command)
         {
             if (id != command.Id)
             {

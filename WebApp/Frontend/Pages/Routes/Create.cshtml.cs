@@ -1,15 +1,14 @@
-﻿using System;
-using Application.Common.DTOs;
+﻿using Application.Common.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Frontend.Common;
+using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.Routes
 {
@@ -22,39 +21,32 @@ namespace WebApp.Frontend.Pages.Routes
         public IList<SelectListItem> StartingStations { get; set; }
 
         [BindProperty]
-        public IList<SelectListItem> DepartureStations { get; set; }
+        public IList<SelectListItem> FinalStations { get; set; }
+
+        [BindProperty]
+        public IList<SelectListItem> TrainIds { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
             var client = HttpClientFactory.CreateClient("api");
 
-            const string actionPath = "Station";
-            var httpResponseMessage = await client.GetAsync(actionPath);
+            const string stationsPath = "Station";
+            var stationResponseMessage = await client.GetAsync(stationsPath);
 
-            if (!httpResponseMessage.IsSuccessStatusCode)
+            const string trainsPath = "Train";
+            var trainResponseMessage = await client.GetAsync(trainsPath);
+
+            if (!stationResponseMessage.IsSuccessStatusCode || !trainResponseMessage.IsSuccessStatusCode)
                 return Page();
 
-            var stations = await client.GetFromJsonAsync<IList<StationDto>>(actionPath);
-            FillStationsDropdown(stations);
+            var stations = await stationResponseMessage.Content.ReadFromJsonAsync<IList<StationDto>>();
+            var trains = await trainResponseMessage.Content.ReadFromJsonAsync<IList<TrainDto>>();
+
+            TrainIds = DropdownFiller.FillTrainIdsDropdown(trains);
+            StartingStations = DropdownFiller.FillStationsDropdown(stations);
+            FinalStations = new List<SelectListItem>(StartingStations);
 
             return Page();
-        }
-
-        private void FillStationsDropdown(IEnumerable<StationDto> stations)
-        {
-            StartingStations = stations?.Select(i =>
-                new SelectListItem
-                {
-                    Value = i.Name,
-                    Text = i.Name
-                }).ToList();
-
-            if (StartingStations == null)
-            {
-                throw new ArgumentNullException($"List {nameof(StartingStations)} is empty.");
-            }
-
-            DepartureStations = new List<SelectListItem>(StartingStations);
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -66,6 +58,8 @@ namespace WebApp.Frontend.Pages.Routes
 
             Route.StartingStation = Request.Form["From"];
             Route.FinalStation = Request.Form["To"];
+            Route.TrainId = short.Parse(Request.Form["TrainId"]);
+            Route.IsOnHold = bool.Parse(Request.Form["IsOnHold"]);
 
             var client = HttpClientFactory.CreateClient("api");
             const string actionPath = "Route/";

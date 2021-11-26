@@ -1,7 +1,7 @@
 ﻿@page
 @model WebApp.Frontend.Pages.Routes.CreateModel
 
-<h4>Creating a new Route</h4>
+<h3>Creating a new Route</h3>
 <hr />
 <div class="row justify-content-center">
     <div class="col-md-4">
@@ -24,12 +24,17 @@
             </div>
             <div class="form-group">
                 <label class="container">To:</label>
-                <select asp-items="Model.DepartureStations" name="To"> </select>
+                <select asp-items="Model.FinalStations" name="To"> </select>
                 <span asp-validation-for="Route.FinalStation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="container">Train id:</label>
+                <select asp-items="Model.TrainIds" name="TrainId"> </select>
+                <span asp-validation-for="Route.TrainId" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Route.IsOnHold" /> 
+                    <input class="form-check-input" asp-for="Route.IsOnHold" name="IsOnHold"/> 
                     @Html.DisplayName("Is on hold?")
                 </label>
             </div>

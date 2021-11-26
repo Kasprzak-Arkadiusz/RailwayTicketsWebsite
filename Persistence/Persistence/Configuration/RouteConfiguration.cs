@@ -25,6 +25,11 @@ namespace Infrastructure.Persistence.Configuration
                 .WithMany(p => p.RouteStartingStation)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_startingStation_Stations");
+
+            builder.HasOne(d => d.Train)
+                .WithMany(p => p.Routes)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_train_Routes");
         }
     }
 }

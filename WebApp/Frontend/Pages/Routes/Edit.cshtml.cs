@@ -1,8 +1,15 @@
 ﻿using Application.Common.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using WebApp.Frontend.Common;
+using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.Routes
 {
@@ -10,6 +17,15 @@ namespace WebApp.Frontend.Pages.Routes
     {
         [BindProperty]
         public RouteDto Route { get; set; }
+
+        [BindProperty]
+        public IList<SelectListItem> StartingStations { get; set; }
+
+        [BindProperty]
+        public IList<SelectListItem> FinalStations { get; set; }
+
+        [BindProperty]
+        public IList<SelectListItem> TrainIds { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -19,49 +35,68 @@ namespace WebApp.Frontend.Pages.Routes
             }
 
             var client = HttpClientFactory.CreateClient("api");
-            var actionPath = $"Route/{id}";
-            var httpResponseMessage = await client.GetAsync(actionPath);
 
-            if (httpResponseMessage.IsSuccessStatusCode)
-            {
-                Route = await client.GetFromJsonAsync<RouteDto>(actionPath);
-            }
+            var routePath = $"Route/{id}";
+            var routeResponseMessage = await client.GetAsync(routePath);
 
-            if (Route == null)
-            {
+            if (!routeResponseMessage.IsSuccessStatusCode)
                 return NotFound();
-            }
+
+            Route = await client.GetFromJsonAsync<RouteDto>(routePath);
+
+            const string stationsPath = "Station";
+            var stationResponseMessage = await client.GetAsync(stationsPath);
+
+            const string trainsPath = "Train";
+            var trainResponseMessage = await client.GetAsync(trainsPath);
+
+            if (!stationResponseMessage.IsSuccessStatusCode || !trainResponseMessage.IsSuccessStatusCode)
+                return Page();
+
+            var stations = await stationResponseMessage.Content.ReadFromJsonAsync<IList<StationDto>>();
+            var trains = await trainResponseMessage.Content.ReadFromJsonAsync<IList<TrainDto>>();
+
+            TrainIds = DropdownFiller.FillTrainIdsDropdown(trains);
+            StartingStations = DropdownFiller.FillStationsDropdown(stations);
+            FinalStations = DropdownFiller.FillStationsDropdown(stations);
+
+            var selectedTrain = TrainIds.First(i => i.Value == Route.TrainId.ToString());
+            selectedTrain.Selected = true;
+
+            var selectedFrom = StartingStations.First(i => i.Value == Route.StartingStation);
+            selectedFrom.Selected = true;
+
+            var selectedTo = FinalStations.First(i => i.Value == Route.FinalStation);
+            selectedTo.Selected = true;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            /*if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Route).State = EntityState.Modified;
+            Route.StartingStation = Request.Form["From"];
+            Route.FinalStation = Request.Form["To"];
+            Route.TrainId = short.Parse(Request.Form["TrainId"]);
+            Route.IsOnHold = bool.Parse(Request.Form["IsOnHold"]);
 
-            try
+            var client = HttpClientFactory.CreateClient("api");
+            var actionPath = $"Route/{Route.Id}";
+
+            var json = JsonConvert.SerializeObject(Route);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var httpResponseMessage = await client.PutAsync(actionPath, content);
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                await _context.SaveChangesAsync();
+                return Page();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RouteExists(Route.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }*/
 
-            return RedirectToPage("./FindRoutes");
+            return RedirectToPage("/FindRoutes");
         }
     }
 }

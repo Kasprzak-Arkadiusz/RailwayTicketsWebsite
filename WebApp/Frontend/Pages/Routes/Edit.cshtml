@@ -21,18 +21,23 @@
                 <span asp-validation-for="Route.ArrivalTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>From:</label>
-                <input asp-for="Route.StartingStation" class="form-control" />
+                <label class="container">From:</label>
+                <select asp-items="Model.StartingStations" name="From"> </select>
                 <span asp-validation-for="Route.StartingStation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>To:</label>
-                <input asp-for="Route.FinalStation" class="form-control" />
+                <label class="container">To:</label>
+                <select asp-items="Model.FinalStations" name="To"> </select>
                 <span asp-validation-for="Route.FinalStation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="container">Train id:</label>
+                <select asp-items="Model.TrainIds" name="TrainId"> </select>
+                <span asp-validation-for="Route.TrainId" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Route.IsOnHold" /> 
+                    <input class="form-check-input" asp-for="Route.IsOnHold" name="IsOnHold"/> 
                     @Html.DisplayName("Is on hold?")
                 </label>
             </div>

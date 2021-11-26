@@ -9,6 +9,7 @@ namespace Application.Mappings
         public ApplicationProfile()
         {
             CreateMap<Station, StationDto>();
+            CreateMap<Train, TrainDto>();
         }
     }
 }

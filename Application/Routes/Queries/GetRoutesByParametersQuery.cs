@@ -13,8 +13,8 @@ namespace Application.Routes.Queries
 {
     public class GetRoutesByParametersQuery : IRequest<IEnumerable<RouteDto>>
     {
-        public string StartingStationName { get; set; }
-        public string FinalStationName { get; set;}
+        public string StartingStation { get; set; }
+        public string FinalStation { get; set;}
         public DateTime DepartureTime { get; set; }
     }
 
@@ -30,14 +30,14 @@ namespace Application.Routes.Queries
         public async Task<IEnumerable<RouteDto>> Handle(GetRoutesByParametersQuery request, CancellationToken cancellationToken)
         {
             var queryBuilder = _context.Routes.AsQueryable();
-            if (request.StartingStationName is not null)
+            if (request.StartingStation is not null)
             {
-                queryBuilder = queryBuilder.Where(r => r.StartingStation.Name == request.StartingStationName);
+                queryBuilder = queryBuilder.Where(r => r.StartingStation.Name == request.StartingStation);
             }
 
-            if (request.FinalStationName is not null)
+            if (request.FinalStation is not null)
             {
-                queryBuilder = queryBuilder.Where(r => r.FinalStation.Name == request.FinalStationName);
+                queryBuilder = queryBuilder.Where(r => r.FinalStation.Name == request.FinalStation);
             }
 
             if (request.DepartureTime != DateTime.MinValue)

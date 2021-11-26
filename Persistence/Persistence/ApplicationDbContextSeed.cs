@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,58 +13,30 @@ namespace Infrastructure.Persistence
         {
             if (!context.Stations.Any())
             {
-                context.Stations.AddRange(
-                    new Station { Name = "Warszawa Centralna", },
-                    new Station { Name = "Gdańsk Główny" },
-                    new Station { Name = "Poznań Wschód" },
-                    new Station { Name = "Kraków Główny" },
-                    new Station { Name = "Warszawa Zachodnia" },
-                    new Station { Name = "Dąbrowa Górnicza Huta Katowice" });
-
-                context.Trains.AddRange(
-                    new Train
-                    {
-                        TrainId = 1024,
-                        NumberOfCars = 8,
-                        NumberOfSeats = 256
-                    },
-                    new Train
-                    {
-                        TrainId = 1769,
-                        NumberOfCars = 6,
-                        NumberOfSeats = 288
-                    },
-                    new Train
-                    {
-                        TrainId = 317,
-                        NumberOfCars = 5,
-                        NumberOfSeats = 240
-                    }
-                );
-                await context.SaveChangesAsync();
-
-                var trains = await context.Trains.ToListAsync();
-                var seats = new List<Seat>();
-
-                foreach (var train in trains)
+                var stations = new List<Station>
                 {
-                    int numberOfSeatsInCar = train.NumberOfSeats / train.NumberOfCars;
-                    for (int i = 0; i < train.NumberOfSeats; i++)
-                    {
-                        seats.Add(new Seat
-                        {
-                            Train = train,
-                            Car = (byte)(i / numberOfSeatsInCar + 1),
-                            Number = (short)(i + 1),
-                            IsFree = true
-                        });
-                    }
-                }
-                context.Seats.AddRange(seats);
+                    new() { Name = "Warszawa Centralna", },
+                    new() { Name = "Gdańsk Główny" },
+                    new() { Name = "Poznań Wschód" },
+                    new() { Name = "Kraków Główny" },
+                    new() { Name = "Warszawa Zachodnia" },
+                    new() { Name = "Dąbrowa Górnicza Huta Katowice" }
+                };
+                context.Stations.AddRange(stations);
 
-                var stations = await context.Stations.ToListAsync();
-                context.Routes.AddRange(
-                    new Route
+                var trains = new List<Train>
+                {
+                    new (1024, 8, 256),
+                    new (1769, 6, 288),
+                    new (317, 5, 240)
+                };
+                context.Trains.AddRange(trains);
+
+                /*await context.SaveChangesAsync();*/
+
+                var routes = new List<Route>
+                {
+                    new()
                     {
                         StartingStation = stations[0],
                         FinalStation = stations[1],
@@ -74,7 +45,7 @@ namespace Infrastructure.Persistence
                         IsOnHold = false,
                         Train = trains[0]
                     },
-                    new Route
+                    new()
                     {
                         StartingStation = stations[2],
                         FinalStation = stations[3],
@@ -83,7 +54,7 @@ namespace Infrastructure.Persistence
                         IsOnHold = false,
                         Train = trains[1]
                     },
-                    new Route
+                    new()
                     {
                         StartingStation = stations[4],
                         FinalStation = stations[5],
@@ -91,49 +62,68 @@ namespace Infrastructure.Persistence
                         ArrivalTimeInMinutesPastMidnight = 60,
                         IsOnHold = true,
                         Train = trains[2]
-                    });
-                await context.SaveChangesAsync();
+                    }
+                };
+                context.Routes.AddRange(routes);
 
-                var routes = await context.Routes.ToListAsync();
+                var seats = new List<Seat>
+                {
+                    new(64, trains[0]),
+                    new(1, trains[1]),
+                    new(240, trains[2])
+                };
+                context.Seats.AddRange(seats);
+
+                /*await context.SaveChangesAsync();
+                */
+
                 var userId = await identityService.GetUserIdByUserName("justAnUser");
 
-                context.Tickets.AddRange(
-                    new Ticket
+                var tickets = new List<Ticket>
+                {
+                    new()
                     {
                         OwnerId = userId,
                         DayOfDeparture = DateTime.Now,
                         Route = routes[0],
                         Train = trains[0],
-                        Seat = seats.SingleOrDefault(s => s.Train == trains[0] && s.Number == 64)
+                        Seat = seats[0]
                     },
-                    new Ticket
+                    new()
                     {
                         OwnerId = userId,
                         DayOfDeparture = new DateTime(2021, 12, 20),
                         Route = routes[1],
                         Train = trains[1],
-                        Seat = seats.SingleOrDefault(s => s.Train == trains[1] && s.Number == 1)
+                        Seat = seats[1]
                     },
-                    new Ticket
+                    new()
                     {
                         OwnerId = userId,
                         DayOfDeparture = new DateTime(2021, 12, 6),
                         Route = routes[2],
                         Train = trains[2],
-                        Seat = seats.SingleOrDefault(s => s.Train == trains[2] && s.Number == 240)
-                    });
-                await context.SaveChangesAsync();
+                        Seat = seats[2]
+                    }
+                };
+                context.Tickets.AddRange(tickets);
+
+                /*
+                await context.SaveChangesAsync();*/
 
                 //Change GenericReasonOfReturn when enum for it will be created
-                var tickets = await context.Tickets.ToListAsync();
-                context.ReturnedTickets.AddRange(
-                    new ReturnedTicket
+                var returnedTickets = new List<ReturnedTicket>
+                {
+                    new()
                     {
                         Ticket = tickets[1],
                         DateOfReturn = new DateTime(2021, 11, 6),
                         GenericReasonOfReturn = "The reason for my ride is no longer valid.",
                         PersonalReasonOfReturn = "Due to change in my personal affairs i don't see point in traveling by train."
-                    });
+                    }
+                };
+
+                context.ReturnedTickets.AddRange(returnedTickets);
                 await context.SaveChangesAsync();
             }
         }

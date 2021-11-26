@@ -4,6 +4,7 @@ using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,8 +16,8 @@ namespace Application.Routes.Commands
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         public bool IsOnHold { get; set; }
-        public string StartingStationName { get; set; }
-        public string FinalStationName { get; set; }
+        public string StartingStation { get; set; }
+        public string FinalStation { get; set; }
         public short TrainId { get; set; }
     }
 
@@ -42,9 +43,9 @@ namespace Application.Routes.Commands
             entity.ArrivalTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.ArrivalTime);
             entity.IsOnHold = request.IsOnHold;
             entity.StartingStation = await _context.Stations.SingleAsync(
-                s => s.Name == request.StartingStationName, cancellationToken);
+                s => s.Name == request.StartingStation, cancellationToken);
             entity.FinalStation = await _context.Stations.SingleAsync(
-                s => s.Name == request.FinalStationName, cancellationToken);
+                s => s.Name == request.FinalStation, cancellationToken);
             entity.Train = await _context.Trains.SingleAsync(
                 t => t.TrainId == request.TrainId, cancellationToken);
 

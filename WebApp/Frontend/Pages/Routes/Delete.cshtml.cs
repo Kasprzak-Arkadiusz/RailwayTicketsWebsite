@@ -24,7 +24,7 @@ namespace WebApp.Frontend.Pages.Routes
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Route = await client.GetFromJsonAsync<RouteDto>(actionPath);
+                Route = await httpResponseMessage.Content.ReadFromJsonAsync<RouteDto>();
             }
 
             if (Route == null)
