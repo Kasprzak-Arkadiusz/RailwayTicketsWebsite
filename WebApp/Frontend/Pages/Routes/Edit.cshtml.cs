@@ -30,9 +30,8 @@ namespace WebApp.Frontend.Pages.Routes
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
+
 
             var client = HttpClientFactory.CreateClient("api");
 
@@ -75,9 +74,7 @@ namespace WebApp.Frontend.Pages.Routes
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             Route.StartingStation = Request.Form["From"];
             Route.FinalStation = Request.Form["To"];
@@ -92,9 +89,7 @@ namespace WebApp.Frontend.Pages.Routes
             var httpResponseMessage = await client.PutAsync(actionPath, content);
 
             if (!httpResponseMessage.IsSuccessStatusCode)
-            {
                 return Page();
-            }
 
             return RedirectToPage("/FindRoutes");
         }

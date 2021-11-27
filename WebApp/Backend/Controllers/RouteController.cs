@@ -48,9 +48,8 @@ namespace WebApp.Backend.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRouteCommand command)
         {
             if (id != command.Id)
-            {
                 return BadRequest();
-            }
+
             return Ok(await Mediator.Send(command));
         }
     }

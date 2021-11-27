@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Application.Common.Interfaces;
 using MediatR;
 using System.Threading;
@@ -26,12 +27,19 @@ namespace Application.Routes.Commands
         public async Task<Unit> Handle(DeleteRouteCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.Routes
+                .Include(r => r.StartingStation)
+                .Include(r => r.FinalStation)
                 .Where(r => r.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
 
             if (entity is null)
             {
                 throw new NotFoundException(nameof(Route), request.Id);
+            }
+
+            if (!entity.IsOnHold)
+            {
+                throw new InvalidOperationException("A route cannot be deleted unless it's on hold.");
             }
 
             _context.Routes.Remove(entity);

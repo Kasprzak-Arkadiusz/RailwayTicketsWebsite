@@ -14,42 +14,34 @@ namespace WebApp.Frontend.Pages.Routes
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var client = HttpClientFactory.CreateClient("api");
             var actionPath = $"Route/{id}";
             var httpResponseMessage = await client.GetAsync(actionPath);
 
             if (httpResponseMessage.IsSuccessStatusCode)
-            {
                 Route = await httpResponseMessage.Content.ReadFromJsonAsync<RouteDto>();
-            }
 
             if (Route == null)
-            {
                 return NotFound();
-            }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            /*if (id == null)
-            {
+            if (id == null)
                 return NotFound();
-            }
 
-            Route = await _context.Routes.FindAsync(id);
+            var client = HttpClientFactory.CreateClient("api");
+            var actionPath = $"Route/{Route.Id}";
 
-            if (Route != null)
-            {
-                _context.Routes.Remove(Route);
-                await _context.SaveChangesAsync();
-            }
-            */
-            return RedirectToPage("./Index");
+            var httpResponseMessage = await client.DeleteAsync(actionPath);
+            if (!httpResponseMessage.IsSuccessStatusCode)
+                return await OnGetAsync(id);
+
+            return RedirectToPage("/FindRoutes");
         }
     }
 }

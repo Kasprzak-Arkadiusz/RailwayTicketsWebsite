@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Web;
 using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.Routes
@@ -49,13 +50,16 @@ namespace WebApp.Frontend.Pages.Routes
 
             var client = HttpClientFactory.CreateClient("api");
             const string actionPath = "Route/search";
-            var uriBuilder = new UriBuilder(client.BaseAddress + actionPath)
-            {
-                Query = Uri.EscapeUriString(
-                    $"startingStationName={Input.From}&finalStationName={Input.To}&departureTime={Input.DepartureTime:O}")
-            };
+            var uriBuilder = new UriBuilder(client.BaseAddress + actionPath);
+            
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            query["startingStationName"] = Input.From;
+            query["finalStationName"] = Input.To;
+            query["departureTime"] = Input.DepartureTime.ToString("HH:mm");
+            uriBuilder.Query = query.ToString() ?? string.Empty;
+            var url = uriBuilder.ToString();
 
-            var httpResponseMessage = await client.GetAsync(uriBuilder.Uri);
+            var httpResponseMessage = await client.GetAsync(url);
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
