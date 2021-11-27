@@ -21,7 +21,7 @@ namespace Infrastructure.Identity
         public IdentityService(
             UserManager<ApplicationUser> userManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-            IAuthorizationService authorizationService, 
+            IAuthorizationService authorizationService,
             RoleManager<IdentityRole> roleManager,
             IMapper mapper)
         {
@@ -66,17 +66,16 @@ namespace Infrastructure.Identity
         public async Task<Result> EnsureUserIsInRoleAsync(string userId, string role)
         {
             if (!await _roleManager.RoleExistsAsync(role))
-            {
                 await _roleManager.CreateAsync(new IdentityRole(role));
-            }
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return Result.Failure(new[] { "Couldn't find a user with provided id." });
-            }
 
-            await _userManager.AddToRoleAsync(user, role);
+            if (user == null)
+                return Result.Failure(new[] { "Couldn't find a user with provided id." });
+
+            if (!await _userManager.IsInRoleAsync(user, role))
+                await _userManager.AddToRoleAsync(user, role);
+
             return Result.Success();
         }
 
@@ -91,9 +90,7 @@ namespace Infrastructure.Identity
             }
 
             if (userToFind == null)
-            {
                 throw new Exception("User couldn't be created.");
-            }
 
             return userToFind.Id;
         }

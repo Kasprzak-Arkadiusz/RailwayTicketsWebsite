@@ -8,6 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Reflection;
+using Serilog;
+using WebApp.Backend.Middleware;
+using FluentValidation;
 
 namespace WebApp
 {
@@ -60,7 +64,10 @@ namespace WebApp
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.AddTransient<ExceptionHandlingMiddleware>();
+
             services.AddApplication();
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddInfrastructure(Configuration);
         }
 
@@ -75,9 +82,10 @@ namespace WebApp
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

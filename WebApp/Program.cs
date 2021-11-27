@@ -19,6 +19,10 @@ namespace WebApp
                 .AddJsonFile("appsettings.json")
                 .Build();
 
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
+
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
@@ -34,9 +38,6 @@ namespace WebApp
                 }
                 catch (Exception ex)
                 {
-                    Log.Logger = new LoggerConfiguration()
-                        .ReadFrom.Configuration(config)
-                        .CreateLogger();
                     Log.Error(ex, "An error occurred while migrating or seeding the database.");
                     throw;
                 }

@@ -46,6 +46,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.12" />

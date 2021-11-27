@@ -2,18 +2,15 @@
 using Application.Routes.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Application.Routes.Commands.CreateRoute;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApp.Backend.Controllers
 {
     public class RouteController : BaseApiController
     {
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateRouteCommand command)
-        {
-            return Ok(await Mediator.Send(command));
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -38,6 +35,14 @@ namespace WebApp.Backend.Controllers
             }));
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Create([FromBody] CreateRouteCommand command, CancellationToken cancellationToken)
+        {
+            return Ok(await Mediator.Send(command, cancellationToken));
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -45,6 +50,8 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRouteCommand command)
         {
             if (id != command.Id)
