@@ -33,7 +33,7 @@ namespace Application.Routes.Commands.DeleteRoute
                 throw new NotFoundException(nameof(Route), request.Id);
             }
 
-            if (!entity.IsOnHold)
+            if (!entity.IsSuspended)
             {
                 throw new InvalidOperationException("A route cannot be deleted unless it's on hold.");
             }

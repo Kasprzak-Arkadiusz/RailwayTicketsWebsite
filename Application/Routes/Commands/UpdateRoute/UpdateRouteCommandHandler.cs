@@ -33,9 +33,9 @@ namespace Application.Routes.Commands.UpdateRoute
             var train = await _context.Trains.SingleOrDefaultAsync(
                 t => t.TrainId == request.TrainId, cancellationToken);
 
-            entity.DepartureTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.DepartureTime);
-            entity.ArrivalTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.ArrivalTime);
-            entity.IsOnHold = request.IsOnHold;
+            entity.DepartureTime = request.DepartureTime;
+            entity.ArrivalTime = request.ArrivalTime;
+            entity.IsSuspended = request.IsOnHold;
             entity.StartingStation = startingStation ?? throw new NotFoundException("A starting station couldn't be found.");
             entity.FinalStation = finalStation ?? throw new NotFoundException("A final station couldn't be found.");
             entity.Train = train ?? throw new NotFoundException("A train couldn't be found.");

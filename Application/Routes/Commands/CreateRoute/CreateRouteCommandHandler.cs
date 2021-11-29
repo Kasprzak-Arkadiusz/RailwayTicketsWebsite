@@ -43,9 +43,9 @@ namespace Application.Routes.Commands.CreateRoute
 
             var entity = new Route
             {
-                DepartureTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.DepartureTime),
-                ArrivalTimeInMinutesPastMidnight = DateTimeToShortConverter.Convert(request.ArrivalTime),
-                IsOnHold = request.IsOnHold,
+                DepartureTime = request.DepartureTime,
+                ArrivalTime = request.ArrivalTime,
+                IsSuspended = request.IsOnHold,
                 StartingStation = startingStation,
                 FinalStation = finalStation,
                 Train = train

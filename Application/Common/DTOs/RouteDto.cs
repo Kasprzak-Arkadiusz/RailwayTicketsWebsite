@@ -9,7 +9,7 @@ namespace Application.Common.DTOs
         public string FinalStation { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
-        public bool IsOnHold { get; set; }
+        public bool IsSuspended { get; set; }
         public short TrainId { get; set; }
     }
 }

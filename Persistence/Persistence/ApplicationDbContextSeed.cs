@@ -32,35 +32,33 @@ namespace Infrastructure.Persistence
                 };
                 context.Trains.AddRange(trains);
 
-                /*await context.SaveChangesAsync();*/
-
                 var routes = new List<Route>
                 {
                     new()
                     {
                         StartingStation = stations[0],
                         FinalStation = stations[1],
-                        DepartureTimeInMinutesPastMidnight = 480,
-                        ArrivalTimeInMinutesPastMidnight = 780,
-                        IsOnHold = false,
+                        DepartureTime = new DateTime(2021, 12, 18, 8, 0, 0),
+                        ArrivalTime = new DateTime(2021, 12, 18, 13, 0, 0),
+                        IsSuspended = false,
                         Train = trains[0]
                     },
                     new()
                     {
                         StartingStation = stations[2],
                         FinalStation = stations[3],
-                        DepartureTimeInMinutesPastMidnight = 720,
-                        ArrivalTimeInMinutesPastMidnight = 1020,
-                        IsOnHold = false,
+                        DepartureTime = new DateTime(2021, 12, 18, 12, 0, 0),
+                        ArrivalTime = new DateTime(2021, 12, 18, 17, 0, 0),
+                        IsSuspended = false,
                         Train = trains[1]
                     },
                     new()
                     {
                         StartingStation = stations[4],
                         FinalStation = stations[5],
-                        DepartureTimeInMinutesPastMidnight = 1200,
-                        ArrivalTimeInMinutesPastMidnight = 60,
-                        IsOnHold = true,
+                        DepartureTime = new DateTime(2021, 12, 18, 20, 0, 0),
+                        ArrivalTime = new DateTime(2021, 12, 19, 1, 0, 0),
+                        IsSuspended = true,
                         Train = trains[2]
                     }
                 };
@@ -74,8 +72,25 @@ namespace Infrastructure.Persistence
                 };
                 context.Seats.AddRange(seats);
 
-                /*await context.SaveChangesAsync();
-                */
+                var seatReservations = new List<SeatReservation>()
+                {
+                    new()
+                    {
+                        Seat = seats[0],
+                        TrainDepartureTime = routes[0].DepartureTime
+                    },
+                    new()
+                    {
+                        Seat = seats[1],
+                        TrainDepartureTime = routes[1].DepartureTime,
+                    },
+                    new()
+                    {
+                        Seat = seats[2],
+                        TrainDepartureTime = routes[2].DepartureTime
+                    }
+                };
+                context.SeatReservations.AddRange(seatReservations);
 
                 var userId = await identityService.GetUserIdByUserName("justAnUser");
 
@@ -84,32 +99,26 @@ namespace Infrastructure.Persistence
                     new()
                     {
                         OwnerId = userId,
-                        DayOfDeparture = DateTime.Now,
                         Route = routes[0],
                         Train = trains[0],
-                        Seat = seats[0]
+                        SeatReservation = seatReservations[0]
                     },
                     new()
                     {
                         OwnerId = userId,
-                        DayOfDeparture = new DateTime(2021, 12, 20),
                         Route = routes[1],
                         Train = trains[1],
-                        Seat = seats[1]
+                        SeatReservation = seatReservations[1]
                     },
                     new()
                     {
                         OwnerId = userId,
-                        DayOfDeparture = new DateTime(2021, 12, 6),
                         Route = routes[2],
                         Train = trains[2],
-                        Seat = seats[2]
+                        SeatReservation = seatReservations[2]
                     }
                 };
                 context.Tickets.AddRange(tickets);
-
-                /*
-                await context.SaveChangesAsync();*/
 
                 //Change GenericReasonOfReturn when enum for it will be created
                 var returnedTickets = new List<ReturnedTicket>

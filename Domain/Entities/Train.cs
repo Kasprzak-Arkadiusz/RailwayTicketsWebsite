@@ -8,7 +8,6 @@ namespace Domain.Entities
         public short TrainId { get; set; }
         public byte NumberOfCars { get; set; }
         public short NumberOfSeats { get; set; }
-        public short NumberOfFreeSeats { get; set; }
 
         public virtual ICollection<Seat> Seats { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }
@@ -22,7 +21,6 @@ namespace Domain.Entities
             TrainId = trainId;
             NumberOfCars = numberOfCars;
             NumberOfSeats = numberOfSeats;
-            NumberOfFreeSeats = NumberOfSeats;
         }
     }
 }

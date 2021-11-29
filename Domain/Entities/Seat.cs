@@ -1,5 +1,5 @@
 ﻿using Domain.Common;
-using System.Collections.Generic;
+using System;
 
 namespace Domain.Entities
 {
@@ -7,10 +7,10 @@ namespace Domain.Entities
     {
         public byte Car { get; set; }
         public short Number { get; set; }
-        public bool? IsFree { get; set; }
-
         public Train Train { get; set; }
-        public ICollection<Ticket> Tickets { get; set; }
+
+        public int SeatForeignKey { get; set; }
+        public SeatReservation SeatReservation { get; set; }
 
         public Seat()
         { }
@@ -18,7 +18,6 @@ namespace Domain.Entities
         public Seat(short seatNumber, Train train)
         {
             Number = seatNumber;
-            IsFree = true;
             Train = train;
             Car = CalculateCarNumber(train, seatNumber);
         }

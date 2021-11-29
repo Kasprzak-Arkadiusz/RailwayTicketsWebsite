@@ -10,11 +10,11 @@ namespace Infrastructure.Persistence.Configuration
         {
             builder.Property(r => r.Id).HasColumnName("id");
 
-            builder.Property(r => r.ArrivalTimeInMinutesPastMidnight).HasColumnName("arrivalTimeInMinutesPastMidnight");
+            builder.Property(r => r.ArrivalTime).HasColumnName("arrivalTime");
 
-            builder.Property(r => r.DepartureTimeInMinutesPastMidnight).HasColumnName("departureTimeInMinutesPastMidnight");
+            builder.Property(r => r.DepartureTime).HasColumnName("departureTime");
 
-            builder.Property(r => r.IsOnHold).HasColumnName("isOnHold");
+            builder.Property(r => r.IsSuspended).HasColumnName("isSuspended");
 
             builder.HasOne(d => d.FinalStation)
                 .WithMany(p => p.RouteFinalStation)

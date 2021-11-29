@@ -12,17 +12,16 @@ namespace Infrastructure.Persistence.Configuration
 
             builder.Property(s => s.Car).HasColumnName("car");
 
-            builder.Property(s => s.IsFree)
-                .IsRequired()
-                .HasColumnName("isFree")
-                .HasDefaultValueSql("((1))");
-
             builder.Property(s => s.Number).HasColumnName("number");
 
             builder.HasOne(d => d.Train)
                 .WithMany(p => p.Seats)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Seats_Trains");
+
+            builder.HasOne(s => s.SeatReservation)
+                .WithOne(sr => sr.Seat)
+                .HasForeignKey<Seat>(s => s.SeatForeignKey);
         }
     }
 }

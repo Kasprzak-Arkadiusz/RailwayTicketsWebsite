@@ -60,20 +60,23 @@ namespace Persistence.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<short>("ArrivalTimeInMinutesPastMidnight")
-                        .HasColumnType("smallint")
-                        .HasColumnName("arrivalTimeInMinutesPastMidnight");
+                    b.Property<DateTime>("ArrivalTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("arrivalTime");
 
-                    b.Property<short>("DepartureTimeInMinutesPastMidnight")
-                        .HasColumnType("smallint")
-                        .HasColumnName("departureTimeInMinutesPastMidnight");
+                    b.Property<DateTime>("DepartureTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("departureTime");
 
                     b.Property<int?>("FinalStationId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsOnHold")
+                    b.Property<bool>("IsSuspended")
                         .HasColumnType("bit")
-                        .HasColumnName("isOnHold");
+                        .HasColumnName("isSuspended");
+
+                    b.Property<short>("NumberOfFreeSeats")
+                        .HasColumnType("smallint");
 
                     b.Property<int?>("StartingStationId")
                         .HasColumnType("int");
@@ -104,25 +107,47 @@ namespace Persistence.Migrations
                         .HasColumnType("tinyint")
                         .HasColumnName("car");
 
-                    b.Property<bool?>("IsFree")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasColumnName("isFree")
-                        .HasDefaultValueSql("((1))");
-
                     b.Property<short>("Number")
                         .HasColumnType("smallint")
                         .HasColumnName("number");
+
+                    b.Property<int>("SeatForeignKey")
+                        .HasColumnType("int");
 
                     b.Property<int?>("TrainId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SeatForeignKey")
+                        .IsUnique();
+
                     b.HasIndex("TrainId");
 
                     b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SeatReservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("SeatReservationForeignKey")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TrainDepartureTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Train departure time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeatReservationForeignKey")
+                        .IsUnique()
+                        .HasFilter("[SeatReservationForeignKey] IS NOT NULL");
+
+                    b.ToTable("SeatReservations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Station", b =>
@@ -152,18 +177,11 @@ namespace Persistence.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DayOfDeparture")
-                        .HasColumnType("date")
-                        .HasColumnName("dayOfDeparture");
-
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ownerId");
 
                     b.Property<int?>("RouteId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SeatId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TrainId")
@@ -172,8 +190,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RouteId");
-
-                    b.HasIndex("SeatId");
 
                     b.HasIndex("TrainId");
 
@@ -191,9 +207,6 @@ namespace Persistence.Migrations
                     b.Property<byte>("NumberOfCars")
                         .HasColumnType("tinyint")
                         .HasColumnName("numberOfCars");
-
-                    b.Property<short>("NumberOfFreeSeats")
-                        .HasColumnType("smallint");
 
                     b.Property<short>("NumberOfSeats")
                         .HasColumnType("smallint")
@@ -459,12 +472,30 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Seat", b =>
                 {
+                    b.HasOne("Domain.Entities.SeatReservation", "SeatReservation")
+                        .WithOne("Seat")
+                        .HasForeignKey("Domain.Entities.Seat", "SeatForeignKey")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Train", "Train")
                         .WithMany("Seats")
                         .HasForeignKey("TrainId")
                         .HasConstraintName("fk_Seats_Trains");
 
+                    b.Navigation("SeatReservation");
+
                     b.Navigation("Train");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SeatReservation", b =>
+                {
+                    b.HasOne("Domain.Entities.Ticket", "Ticket")
+                        .WithOne("SeatReservation")
+                        .HasForeignKey("Domain.Entities.SeatReservation", "SeatReservationForeignKey")
+                        .HasConstraintName("fk_Tickets_SeatReservations");
+
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("Domain.Entities.Ticket", b =>
@@ -474,19 +505,12 @@ namespace Persistence.Migrations
                         .HasForeignKey("RouteId")
                         .HasConstraintName("fk_Tickets_Routes");
 
-                    b.HasOne("Domain.Entities.Seat", "Seat")
-                        .WithMany("Tickets")
-                        .HasForeignKey("SeatId")
-                        .HasConstraintName("fk_Tickets_Seats");
-
                     b.HasOne("Domain.Entities.Train", "Train")
                         .WithMany("Tickets")
                         .HasForeignKey("TrainId")
                         .HasConstraintName("fk_Tickets_Trains");
 
                     b.Navigation("Route");
-
-                    b.Navigation("Seat");
 
                     b.Navigation("Train");
                 });
@@ -547,9 +571,9 @@ namespace Persistence.Migrations
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Seat", b =>
+            modelBuilder.Entity("Domain.Entities.SeatReservation", b =>
                 {
-                    b.Navigation("Tickets");
+                    b.Navigation("Seat");
                 });
 
             modelBuilder.Entity("Domain.Entities.Station", b =>
@@ -562,6 +586,8 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.Ticket", b =>
                 {
                     b.Navigation("ReturnedTickets");
+
+                    b.Navigation("SeatReservation");
                 });
 
             modelBuilder.Entity("Domain.Entities.Train", b =>

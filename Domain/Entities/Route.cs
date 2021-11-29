@@ -1,13 +1,15 @@
-﻿using Domain.Common;
+﻿using System;
+using Domain.Common;
 using System.Collections.Generic;
 
 namespace Domain.Entities
 {
     public class Route : BaseEntity
     {
-        public short DepartureTimeInMinutesPastMidnight { get; set; }
-        public short ArrivalTimeInMinutesPastMidnight { get; set; }
-        public bool IsOnHold { get; set; }
+        public DateTime DepartureTime { get; set; }
+        public DateTime ArrivalTime { get; set; }
+        public bool IsSuspended { get; set; }
+        public short NumberOfFreeSeats { get; set; }
 
         public Station FinalStation { get; set; }
         public Station StartingStation { get; set; }

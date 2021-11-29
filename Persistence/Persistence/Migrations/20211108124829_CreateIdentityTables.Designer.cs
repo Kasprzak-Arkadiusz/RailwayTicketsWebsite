@@ -75,7 +75,7 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("finalStation");
 
-                    b.Property<bool>("IsOnHold")
+                    b.Property<bool>("IsSuspended")
                         .HasColumnType("bit")
                         .HasColumnName("isOnHold");
 

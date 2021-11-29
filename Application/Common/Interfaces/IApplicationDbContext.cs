@@ -12,6 +12,7 @@ namespace Application.Common.Interfaces
         public DbSet<Station> Stations { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Train> Trains { get; set; }
+        public DbSet<SeatReservation> SeatReservations { get; set; }
 
         Task<int> SaveChangesAsync();
     }

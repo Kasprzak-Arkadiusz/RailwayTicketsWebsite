@@ -29,9 +29,9 @@ namespace Application.Routes.Queries
                 Id = route.Id,
                 StartingStation = route.StartingStation.Name,
                 FinalStation = route.FinalStation.Name,
-                ArrivalTime = ShortToDateTimeConverter.Convert(route.ArrivalTimeInMinutesPastMidnight),
-                DepartureTime = ShortToDateTimeConverter.Convert(route.DepartureTimeInMinutesPastMidnight),
-                IsOnHold = route.IsOnHold,
+                ArrivalTime = route.ArrivalTime,
+                DepartureTime = route.DepartureTime,
+                IsSuspended = route.IsSuspended,
                 TrainId = route.Train.TrainId
             }).ToListAsync(cancellationToken);
 

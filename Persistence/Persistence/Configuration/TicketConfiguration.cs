@@ -10,10 +10,6 @@ namespace Infrastructure.Persistence.Configuration
         {
             builder.Property(t => t.Id).HasColumnName("id");
 
-            builder.Property(t => t.DayOfDeparture)
-                .HasColumnType("date")
-                .HasColumnName("dayOfDeparture");
-
             builder.Property(t => t.OwnerId).HasColumnName("ownerId");
 
             builder.HasOne(ti => ti.Route)
@@ -21,10 +17,10 @@ namespace Infrastructure.Persistence.Configuration
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Tickets_Routes");
 
-            builder.HasOne(ti => ti.Seat)
-                .WithMany(s => s.Tickets)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_Tickets_Seats");
+            builder.HasOne(ti => ti.SeatReservation)
+                .WithOne(sr => sr.Ticket)
+                .HasForeignKey<SeatReservation>(sr => sr.SeatReservationForeignKey)
+                .HasConstraintName("fk_Tickets_SeatReservations");
 
             builder.HasOne(ti => ti.Train)
                 .WithMany(tr => tr.Tickets)

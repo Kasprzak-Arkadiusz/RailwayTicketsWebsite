@@ -60,7 +60,7 @@ namespace WebApp.Frontend.Pages.Routes
             Route.StartingStation = Request.Form["From"];
             Route.FinalStation = Request.Form["To"];
             Route.TrainId = short.Parse(Request.Form["TrainId"]);
-            Route.IsOnHold = bool.Parse(Request.Form["IsOnHold"]);
+            Route.IsSuspended = bool.Parse(Request.Form["IsSuspended"]);
 
             var client = HttpClientFactory.CreateClient("api");
             const string actionPath = "Route/";

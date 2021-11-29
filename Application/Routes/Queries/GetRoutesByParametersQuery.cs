@@ -1,24 +1,23 @@
-﻿using System;
+﻿using Application.Common.DTOs;
+using Application.Common.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Converters;
-using Application.Common.DTOs;
-using Application.Common.Interfaces;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Routes.Queries
 {
     public class GetRoutesByParametersQuery : IRequest<IEnumerable<RouteDto>>
     {
         public string StartingStation { get; set; }
-        public string FinalStation { get; set;}
+        public string FinalStation { get; set; }
         public DateTime DepartureTime { get; set; }
     }
 
-    public class GetRoutesWithConditionsQueryHandler : IRequestHandler<GetRoutesByParametersQuery ,IEnumerable<RouteDto>>
+    public class GetRoutesWithConditionsQueryHandler : IRequestHandler<GetRoutesByParametersQuery, IEnumerable<RouteDto>>
     {
         private readonly IApplicationDbContext _context;
 
@@ -26,7 +25,8 @@ namespace Application.Routes.Queries
         {
             _context = context;
         }
-        //TODO Return only routes that are not on hold
+
+        //TODO Return only routes that are not suspended
         public async Task<IEnumerable<RouteDto>> Handle(GetRoutesByParametersQuery request, CancellationToken cancellationToken)
         {
             var queryBuilder = _context.Routes.AsQueryable();
@@ -42,8 +42,7 @@ namespace Application.Routes.Queries
 
             if (request.DepartureTime != DateTime.MinValue)
             {
-                var departureTimeInMinutes = DateTimeToShortConverter.Convert(request.DepartureTime);
-                queryBuilder = queryBuilder.Where(r => r.DepartureTimeInMinutesPastMidnight >= departureTimeInMinutes);
+                queryBuilder = queryBuilder.Where(r => r.DepartureTime >= request.DepartureTime);
             }
 
             var routes = await queryBuilder.Select(route => new RouteDto
@@ -51,9 +50,9 @@ namespace Application.Routes.Queries
                 Id = route.Id,
                 StartingStation = route.StartingStation.Name,
                 FinalStation = route.FinalStation.Name,
-                ArrivalTime = ShortToDateTimeConverter.Convert(route.ArrivalTimeInMinutesPastMidnight),
-                DepartureTime = ShortToDateTimeConverter.Convert(route.DepartureTimeInMinutesPastMidnight),
-                IsOnHold = route.IsOnHold,
+                ArrivalTime = route.ArrivalTime,
+                DepartureTime = route.DepartureTime,
+                IsSuspended = route.IsSuspended,
                 TrainId = route.Train.TrainId
             }).ToListAsync(cancellationToken);
 
