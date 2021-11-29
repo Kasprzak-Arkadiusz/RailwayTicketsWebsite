@@ -1,7 +1,9 @@
 ﻿using Application.Common.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using WebApp.Backend.Models;
 using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.Routes
@@ -10,6 +12,7 @@ namespace WebApp.Frontend.Pages.Routes
     {
         [BindProperty]
         public RouteDto Route { get; set; }
+        public IList<string> Errors { get; set; } = new List<string>();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -38,10 +41,22 @@ namespace WebApp.Frontend.Pages.Routes
             var actionPath = $"Route/{Route.Id}";
 
             var httpResponseMessage = await client.DeleteAsync(actionPath);
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                return await OnGetAsync(id);
+            if (httpResponseMessage.IsSuccessStatusCode)
+                return RedirectToPage("/FindRoutes");
 
-            return RedirectToPage("/FindRoutes");
+            var postResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ErrorDetails>();
+
+            if (postResponse?.Errors == null)
+            {
+                if (postResponse != null) 
+                    Errors.Add(postResponse.Details);
+                return await OnGetAsync(Route.Id);
+            }
+
+            foreach (var (_, value) in postResponse.Errors)
+                Errors.Add(string.Join("\n", value));
+
+            return await OnGetAsync(Route.Id);
         }
     }
 }

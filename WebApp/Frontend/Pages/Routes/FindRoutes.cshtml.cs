@@ -15,7 +15,9 @@ namespace WebApp.Frontend.Pages.Routes
         [BindProperty]
         public InputModel Input { get; init; }
 
-        public IEnumerable<RouteDto> Routes { get; private set; } = new List<RouteDto>();
+        public IList<RouteDto> Routes { get; private set; } = new List<RouteDto>();
+
+        public bool WasFiltered { get; set; }
 
         public class InputModel
         {
@@ -25,6 +27,7 @@ namespace WebApp.Frontend.Pages.Routes
 
             [DataType(DataType.Time)]
             [DisplayFormat(DataFormatString = "{0:HH:mm}")]
+            [Display(Name = "Departure time")]
             public DateTime DepartureTime { get; init; }
         }
 
@@ -37,15 +40,16 @@ namespace WebApp.Frontend.Pages.Routes
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<RouteDto>>();
+                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IList<RouteDto>>();
             }
         }
 
-        public async Task OnPost()
+        public async Task OnPost(bool showAll)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || showAll)
             {
-                RedirectToPage("/FindRoutes");
+               await OnGetAsync();
+               return;
             }
 
             var client = HttpClientFactory.CreateClient("api");
@@ -63,8 +67,10 @@ namespace WebApp.Frontend.Pages.Routes
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<RouteDto>>();
+                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IList<RouteDto>>();
             }
+
+            WasFiltered = true;
         }
     }
 }

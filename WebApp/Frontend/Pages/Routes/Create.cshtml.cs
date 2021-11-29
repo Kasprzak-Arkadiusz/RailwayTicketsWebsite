@@ -49,13 +49,14 @@ namespace WebApp.Frontend.Pages.Routes
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostDelete()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
+            
+            //TODO is this needed?
             Route.StartingStation = Request.Form["From"];
             Route.FinalStation = Request.Form["To"];
             Route.TrainId = short.Parse(Request.Form["TrainId"]);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Domain.Common.Exceptions;
 using Serilog;
+using WebApp.Backend.Models;
 using ApplicationException = Domain.Common.Exceptions.ApplicationException;
 
 namespace WebApp.Backend.Middleware
@@ -28,12 +29,12 @@ namespace WebApp.Backend.Middleware
     private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
-        var response = new
+        var response = new ErrorDetails
         {
-            title = GetTitle(exception),
-            status = statusCode,
-            detail = exception.Message,
-            errors = GetErrors(exception)
+            Title = GetTitle(exception),
+            StatusCode = statusCode,
+            Details = exception.Message,
+            Errors = GetErrors(exception)
         };
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = statusCode;

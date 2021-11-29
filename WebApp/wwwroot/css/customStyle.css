@@ -17,3 +17,7 @@ label {
 h5, h4, h3, h2, h1, b{
     margin-bottom: 1rem;
 }
+
+.top-margin-2 {
+    margin-top: 2rem;
+}

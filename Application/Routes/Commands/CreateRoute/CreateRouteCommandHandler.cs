@@ -1,12 +1,11 @@
-﻿using System;
-using Application.Common.Converters;
+﻿using Application.Common.Converters;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Exceptions;
 
 namespace Application.Routes.Commands.CreateRoute
 {

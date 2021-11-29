@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Application.Routes.Commands.CreateRoute
+namespace Application.Routes.Commands.UpdateRoute
 {
-    public sealed class CreateRouteCommandValidator : AbstractValidator<CreateRouteCommand>
+    public sealed class UpdateRouteCommandValidator : AbstractValidator<UpdateRouteCommand>
     {
-        public CreateRouteCommandValidator()
+        public UpdateRouteCommandValidator()
         {
             RuleFor(x => x.ArrivalTime).NotEqual(x => x.DepartureTime)
                 .WithMessage("The arrival time cannot be equal to the departure time.").NotEmpty();

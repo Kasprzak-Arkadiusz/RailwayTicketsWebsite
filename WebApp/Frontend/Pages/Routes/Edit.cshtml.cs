@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using WebApp.Backend.Models;
 using WebApp.Frontend.Common;
 using WebApp.Frontend.Utils;
 
@@ -27,11 +28,13 @@ namespace WebApp.Frontend.Pages.Routes
         [BindProperty]
         public IList<SelectListItem> TrainIds { get; set; }
 
+        [BindProperty] 
+        public IList<string> Errors { get; set; } = new List<string>();
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
                 return NotFound();
-
 
             var client = HttpClientFactory.CreateClient("api");
 
@@ -79,7 +82,8 @@ namespace WebApp.Frontend.Pages.Routes
             Route.StartingStation = Request.Form["From"];
             Route.FinalStation = Request.Form["To"];
             Route.TrainId = short.Parse(Request.Form["TrainId"]);
-            Route.IsOnHold = bool.Parse(Request.Form["IsOnHold"]);
+            var test = Request.Form["Route.IsOnHold"];
+            Route.IsOnHold = bool.Parse(test);
 
             var client = HttpClientFactory.CreateClient("api");
             var actionPath = $"Route/{Route.Id}";
@@ -88,10 +92,22 @@ namespace WebApp.Frontend.Pages.Routes
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var httpResponseMessage = await client.PutAsync(actionPath, content);
 
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                return Page();
+            if (httpResponseMessage.IsSuccessStatusCode) 
+                return RedirectToPage("./FindRoutes");
 
-            return RedirectToPage("/FindRoutes");
+            var postResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ErrorDetails>();
+
+            if (postResponse?.Errors == null)
+            {
+                if (postResponse != null) 
+                    Errors.Add(postResponse.Details);
+                return await OnGetAsync(Route.Id);
+            }
+
+            foreach (var (_, value) in postResponse.Errors)
+                Errors.Add(string.Join("\n", value));
+
+            return await OnGetAsync(Route.Id);
         }
     }
 }

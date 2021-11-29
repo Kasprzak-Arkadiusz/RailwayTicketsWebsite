@@ -3,9 +3,16 @@
 @{
     Layout = "~/Frontend/Pages/Shared/_Layout.cshtml";
 }
-
 <h3>Editing the route</h3>
 <hr />
+
+@foreach (var error in Model.Errors)
+{
+    <div class="alert-danger alert">
+        @error
+    </div>
+}
+
 <div class="row justify-content-center">
     <div class="col-md-4">
         <form method="post">
