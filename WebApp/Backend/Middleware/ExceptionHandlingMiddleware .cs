@@ -45,6 +45,7 @@ namespace WebApp.Backend.Middleware
         exception switch
         {
             BadRequestException => StatusCodes.Status400BadRequest,
+            ArgumentOutOfRangeException => StatusCodes.Status400BadRequest,
             NotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status422UnprocessableEntity,
             _ => StatusCodes.Status500InternalServerError

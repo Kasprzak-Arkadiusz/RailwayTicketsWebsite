@@ -1,0 +1,59 @@
+﻿@page
+@model WebApp.Frontend.Pages.Tickets.BuyTicketModel
+
+<h3>Buying a ticket</h3>
+<hr />
+
+<h5 class="font-weight-bold">Please verify that all data are correct</h5>
+<div class="justify-content-md-center">
+    <div class="row justify-content-center">
+        <b class="col-sm-2">
+            @Html.DisplayName("Your email:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Ticket.Email)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Departure time:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Ticket.DepartureTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Arrival time:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Ticket.ArrivalTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("From:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Ticket.StartingStation)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("To:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Ticket.FinalStation)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Train identifier:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.Ticket.TrainId)
+        </div>
+        <div class="w-100"></div>
+    </div>
+    
+    <form method="post" class="container" style="margin-top: 1rem">
+        <input type="hidden" asp-for="Ticket.Id" />
+        <a class="btn btn-secondary"  asp-page="/Routes/FindRoutes">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
+</div>

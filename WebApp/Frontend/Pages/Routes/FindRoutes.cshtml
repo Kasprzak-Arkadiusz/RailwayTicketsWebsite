@@ -1,5 +1,6 @@
 ﻿@page
 @using WebApp.Frontend.Utils
+@using Newtonsoft.Json
 @model WebApp.Frontend.Pages.Routes.FindRoutesModel
 
 <div class="row justify-content-center">
@@ -34,7 +35,7 @@
 </div>
 
 <div class="container">
-    <div class="text-left" style="font-size: 12px;">
+    <div class="text-left" style="font-size: 12px; margin-top: 1rem;">
         <a asp-page="/Routes/Create" class="btn btn-success">
             Create a new route
         </a>
@@ -84,6 +85,7 @@
                     <td>
                         <a asp-page="/Routes/Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
                         <a asp-page="/Routes/Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                        <a asp-page="/Tickets/BuyTicket" asp-route-id="@item.Id" class="btn btn-success">Buy ticket</a>
                     </td>
                 </tr>
             }

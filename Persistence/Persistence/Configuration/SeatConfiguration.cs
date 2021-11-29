@@ -21,7 +21,8 @@ namespace Infrastructure.Persistence.Configuration
 
             builder.HasOne(s => s.SeatReservation)
                 .WithOne(sr => sr.Seat)
-                .HasForeignKey<Seat>(s => s.SeatForeignKey);
+                .HasForeignKey<Seat>(s => s.SeatForeignKey)
+                .IsRequired(false);
         }
     }
 }

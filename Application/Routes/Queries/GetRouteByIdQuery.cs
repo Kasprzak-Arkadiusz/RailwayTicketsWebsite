@@ -1,5 +1,4 @@
-﻿using Application.Common.Converters;
-using Application.Common.DTOs;
+﻿using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +22,7 @@ namespace Application.Routes.Queries
             _context = context;
         }
 
+        //TODO Use Automapper here
         public async Task<RouteDto> Handle(GetRouteByIdQuery request, CancellationToken cancellationToken)
         {
             return await _context.Routes

@@ -13,27 +13,27 @@ namespace WebApp.Backend.Controllers
     public class RouteController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToke)
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetAllRoutesQuery(), cancellationToke));
+            return Ok(await Mediator.Send(new GetAllRoutesQuery(), cancellationToken));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToke)
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetRouteByIdQuery() { Id = id }, cancellationToke));
+            return Ok(await Mediator.Send(new GetRouteByIdQuery() { Id = id }, cancellationToken));
         }
 
         [HttpGet("search")]
         public async Task<IActionResult> GetByParameters(string startingStationName,
-            string finalStationName, DateTime departureTime, CancellationToken cancellationToke)
+            string finalStationName, DateTime departureTime, CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetRoutesByParametersQuery
             {
                 StartingStation = startingStationName,
                 FinalStation = finalStationName,
                 DepartureTime = departureTime
-            }, cancellationToke));
+            }, cancellationToken));
         }
 
         [HttpPost]

@@ -10,6 +10,8 @@ namespace Application.Mappings
         {
             CreateMap<Station, StationDto>();
             CreateMap<Train, TrainDto>();
+            CreateMap<Seat, SeatDto>();
+            CreateMap<Route, RouteDto>();
         }
     }
 }

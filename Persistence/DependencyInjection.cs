@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using Application.Common.Interfaces;
-using Application.Common.Models;
+﻿using Application.Common.Interfaces;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Services.EmailService;
