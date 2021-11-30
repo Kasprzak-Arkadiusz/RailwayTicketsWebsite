@@ -66,17 +66,25 @@ namespace WebApp.Areas.Identity.Pages.Account
         {
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return Page();
+
+            var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, false);
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, false);
-                if (result.Succeeded)
-                {
-                    returnUrl ??= Url.Content("~/");
-                    Log.Information("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                returnUrl ??= Url.Content("~/");
+                Log.Information("User logged in.");
+                return LocalRedirect(returnUrl);
             }
+
+            if (result.IsNotAllowed)
+            {
+                Log.Information("User attempted to login without confirmed account.");
+                ModelState.AddModelError(string.Empty, "Please confirm your account before logging in.");
+                return Page();
+            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 
             return Page();
         }

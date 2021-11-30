@@ -19,9 +19,15 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetRouteByIdQuery() { Id = id }, cancellationToken));
+            var result = await Mediator.Send(new GetRouteByIdQuery() { Id = id }, cancellationToken);
+
+            if (result is null)
+                return NotFound("Requested route couldn't be found.");
+
+            return Ok(result);
         }
 
         [HttpGet("search")]

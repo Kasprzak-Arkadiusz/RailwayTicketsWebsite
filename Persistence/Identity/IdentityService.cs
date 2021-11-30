@@ -1,11 +1,14 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Identity
@@ -85,6 +88,12 @@ namespace Infrastructure.Identity
 
             if (userToFind == null)
             {
+                Log.Information($"User \"{userParams.UserName} \" created a new account with password.");
+
+                var identity = new ClaimsIdentity(OAuthDefaults.DisplayName);
+                identity.AddClaim(new Claim(ClaimTypes.Name, userParams.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.Email, userParams.UserName));
+
                 userToFind = _mapper.Map<ApplicationUser>(userParams);
                 await _userManager.CreateAsync(userToFind, password);
             }

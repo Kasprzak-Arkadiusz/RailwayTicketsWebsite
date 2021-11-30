@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Serilog;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebApp.Areas.Identity.Models;
@@ -65,6 +67,9 @@ namespace WebApp.Areas.Identity.Pages.Account
             if (createUserResult.Succeeded && addToRoleResult.Succeeded)
             {
                 Log.Information($"User \"{user.UserName} \" created a new account with password.");
+                var identity = new ClaimsIdentity(OAuthDefaults.DisplayName);
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.Email, user.UserName));
 
                 returnUrl ??= Url.Content("~/");
                 var callbackUrl = await CreateCallbackUrlAsync(user, returnUrl);

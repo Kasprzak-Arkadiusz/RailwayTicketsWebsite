@@ -1,5 +1,6 @@
 ﻿using Application.Common.DTOs;
 using Application.Common.Interfaces;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -16,27 +17,21 @@ namespace Application.Routes.Queries
     public class GetRouteByIdQueryHandler : IRequestHandler<GetRouteByIdQuery, RouteDto>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public GetRouteByIdQueryHandler(IApplicationDbContext context)
+        public GetRouteByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        //TODO Use Automapper here
         public async Task<RouteDto> Handle(GetRouteByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Routes
-                .Where(r => r.Id == request.Id)
-                .Select(route => new RouteDto
-                {
-                    Id = route.Id,
-                    StartingStation = route.StartingStation.Name,
-                    FinalStation = route.FinalStation.Name,
-                    ArrivalTime = route.ArrivalTime,
-                    DepartureTime = route.DepartureTime,
-                    IsSuspended = route.IsSuspended,
-                    TrainId = route.Train.TrainId
-                }).FirstOrDefaultAsync(cancellationToken);
+            var routeDtosWithRequestedId = _mapper.ProjectTo<RouteDto>(_context.Routes.Where(r => r.Id == request.Id));
+
+            var routeDto = await routeDtosWithRequestedId.FirstOrDefaultAsync(cancellationToken);
+
+            return routeDto;
         }
     }
 }

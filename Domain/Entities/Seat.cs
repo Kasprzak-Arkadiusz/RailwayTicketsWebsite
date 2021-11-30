@@ -5,10 +5,9 @@ namespace Domain.Entities
 {
     public class Seat : BaseEntity
     {
-        //TODO check if Car can have private setter
-        public byte Car { get; set; }
-        public short Number { get; set; }
-        public Train Train { get; set; }
+        public byte Car { get;}
+        public short Number { get;}
+        public Train Train { get;}
 
         public int? SeatForeignKey { get; set; }
         public SeatReservation SeatReservation { get; set; }
