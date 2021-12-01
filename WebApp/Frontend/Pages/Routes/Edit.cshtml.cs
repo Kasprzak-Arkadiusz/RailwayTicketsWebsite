@@ -28,7 +28,6 @@ namespace WebApp.Frontend.Pages.Routes
         [BindProperty]
         public IList<SelectListItem> TrainIds { get; set; }
 
-        [BindProperty] 
         public IList<string> Errors { get; set; } = new List<string>();
 
         public async Task<IActionResult> OnGetAsync(int? id)

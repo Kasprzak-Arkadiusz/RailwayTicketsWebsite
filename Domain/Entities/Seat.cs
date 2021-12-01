@@ -1,15 +1,12 @@
 ﻿using Domain.Common;
-using System;
 
 namespace Domain.Entities
 {
     public class Seat : BaseEntity
     {
-        public byte Car { get;}
-        public short Number { get;}
-        public Train Train { get;}
-
-        public int? SeatForeignKey { get; set; }
+        public byte Car { get; }
+        public short Number { get; }
+        public Train Train { get; }
         public SeatReservation SeatReservation { get; set; }
 
         public Seat()

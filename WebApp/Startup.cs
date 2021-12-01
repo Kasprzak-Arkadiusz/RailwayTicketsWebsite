@@ -12,6 +12,7 @@ using System.Reflection;
 using Serilog;
 using WebApp.Backend.Middleware;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApp
 {
@@ -47,6 +48,9 @@ namespace WebApp
             {
                 opt.RootDirectory = "/Frontend/Pages";
             });
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAuthentication()
                 .AddGoogle(options =>

@@ -72,51 +72,25 @@ namespace Infrastructure.Persistence
                 };
                 context.Seats.AddRange(seats);
 
+                await context.SaveChangesAsync();
+
                 var seatReservations = new List<SeatReservation>()
                 {
-                    new()
-                    {
-                        Seat = seats[0],
-                        TrainDepartureTime = routes[0].DepartureTime
-                    },
-                    new()
-                    {
-                        Seat = seats[1],
-                        TrainDepartureTime = routes[1].DepartureTime,
-                    },
-                    new()
-                    {
-                        Seat = seats[2],
-                        TrainDepartureTime = routes[2].DepartureTime
-                    }
+                    new(seats[0]),
+                    new(seats[1]),
+                    new(seats[2])
                 };
                 context.SeatReservations.AddRange(seatReservations);
+
+                await context.SaveChangesAsync();
 
                 var userId = await identityService.GetUserIdByUserName("justAnUser");
 
                 var tickets = new List<Ticket>
                 {
-                    new()
-                    {
-                        OwnerId = userId,
-                        Route = routes[0],
-                        Train = trains[0],
-                        SeatReservation = seatReservations[0]
-                    },
-                    new()
-                    {
-                        OwnerId = userId,
-                        Route = routes[1],
-                        Train = trains[1],
-                        SeatReservation = seatReservations[1]
-                    },
-                    new()
-                    {
-                        OwnerId = userId,
-                        Route = routes[2],
-                        Train = trains[2],
-                        SeatReservation = seatReservations[2]
-                    }
+                    new(userId, routes[0], trains[0], seatReservations[0]),
+                    new(userId, routes[1], trains[1], seatReservations[1]),
+                    new(userId, routes[2], trains[2], seatReservations[2])
                 };
                 context.Tickets.AddRange(tickets);
 

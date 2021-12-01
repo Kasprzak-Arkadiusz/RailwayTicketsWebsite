@@ -8,8 +8,7 @@ namespace Infrastructure.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<SeatReservation> builder)
         {
-            builder.Property(sr => sr.TrainDepartureTime)
-                .HasColumnName("Train departure time").IsRequired();
+            
         }
     }
 }

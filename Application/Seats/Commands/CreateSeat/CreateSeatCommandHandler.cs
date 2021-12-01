@@ -39,6 +39,7 @@ namespace Application.Seats.Commands.CreateSeat
             if (freeSeatsInTrain.Count != 0)
                 return new SeatDto
                 {
+                    Id = freeSeatsInTrain[0].Id,
                     TrainId = train.TrainId,
                     Car = freeSeatsInTrain[0].Car,
                     Number = freeSeatsInTrain[0].Number
@@ -58,6 +59,7 @@ namespace Application.Seats.Commands.CreateSeat
 
             return new SeatDto
             {
+                Id = seat.Id,
                 TrainId = train.TrainId,
                 Car = seat.Car,
                 Number = seat.Number

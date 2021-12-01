@@ -1,5 +1,4 @@
 ﻿using Domain.Common;
-using System;
 using System.Collections.Generic;
 
 namespace Domain.Entities
@@ -9,8 +8,18 @@ namespace Domain.Entities
         public string OwnerId { get; set; }
 
         public Route Route { get; set; }
-        public SeatReservation SeatReservation { get; set; }
+        public ICollection<SeatReservation> SeatReservations { get; set; }
         public Train Train { get; set; }
         public ICollection<ReturnedTicket> ReturnedTickets { get; set; }
+
+        public Ticket(string ownerId, Route route, Train train, SeatReservation seatReservation)
+        {
+            OwnerId = ownerId;
+            Route = route;
+            Train = train;
+            SeatReservations = new List<SeatReservation> { seatReservation };
+        }
+        public Ticket()
+        { }
     }
 }

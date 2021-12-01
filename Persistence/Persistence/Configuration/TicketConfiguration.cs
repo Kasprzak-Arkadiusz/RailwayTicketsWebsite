@@ -17,9 +17,8 @@ namespace Infrastructure.Persistence.Configuration
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Tickets_Routes");
 
-            builder.HasOne(ti => ti.SeatReservation)
+            builder.HasMany(ti => ti.SeatReservations)
                 .WithOne(sr => sr.Ticket)
-                .HasForeignKey<SeatReservation>(sr => sr.SeatReservationForeignKey)
                 .HasConstraintName("fk_Tickets_SeatReservations");
 
             builder.HasOne(ti => ti.Train)

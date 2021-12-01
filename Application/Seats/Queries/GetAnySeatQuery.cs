@@ -32,6 +32,7 @@ namespace Application.Seats.Queries
 
             var seatDto = new SeatDto()
             {
+                Id = seat.Id,
                 Car = seat.Car,
                 Number = seat.Number,
                 TrainId = seat.Train.TrainId

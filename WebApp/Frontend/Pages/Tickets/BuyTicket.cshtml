@@ -8,13 +8,6 @@
 <div class="justify-content-md-center">
     <div class="row justify-content-center">
         <b class="col-sm-2">
-            @Html.DisplayName("Your email:")
-        </b>
-        <div class="col-sm-4">
-            @Html.DisplayFor(model => model.Ticket.Email)
-        </div>
-        <div class="w-100"></div>
-        <b class="col-sm-2">
             @Html.DisplayName("Departure time:")
         </b>
         <div class="col-sm-4">
@@ -46,14 +39,16 @@
             @Html.DisplayName("Train identifier:")
         </b>
         <div class="col-sm-4">
-            @Html.DisplayFor(model => model.Ticket.TrainId)
+            @Html.DisplayFor(model => model.Ticket.TrainIdentifier)
         </div>
         <div class="w-100"></div>
     </div>
-    
+
     <form method="post" class="container" style="margin-top: 1rem">
-        <input type="hidden" asp-for="Ticket.Id" />
-        <a class="btn btn-secondary"  asp-page="/Routes/FindRoutes">Back to List</a>
-        <input type="submit" value="Delete" class="btn btn-danger" />
+        <input asp-for="Ticket.TrainId" type="hidden" id="hiddenTrainId" name="TrainId"/>
+        <input asp-for="Ticket.RouteId" type="hidden" id="hiddenRouteId" name="RouteId"/>
+        <input asp-for="Ticket.SeatReservationId" type="hidden" id="hiddenSeatReservationId" name="SeatReservationId"/>
+        <a class="btn btn-secondary" asp-page="/Routes/FindRoutes">Back to List</a>
+        <input type="submit" value="Buy" class="btn btn-success"/>
     </form>
 </div>
