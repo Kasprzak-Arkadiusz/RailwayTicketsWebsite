@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebApp.Frontend.Pages.Tickets
+namespace WebApp.Frontend.Pages.BuyingTickets
 {
     public class BuyingErrorModel : PageModel
     {

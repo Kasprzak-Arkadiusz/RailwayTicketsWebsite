@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace WebApp.Frontend.Utils
 {
-    public static class IEnumerableExtension
+    public static class EnumerableExtension
     {
         public static bool IsAny<T>(this IEnumerable<T> data)
         {

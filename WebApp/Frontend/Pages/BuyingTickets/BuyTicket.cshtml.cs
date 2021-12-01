@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using WebApp.Backend.Models;
 using WebApp.Frontend.Common;
 
-namespace WebApp.Frontend.Pages.Tickets
+namespace WebApp.Frontend.Pages.BuyingTickets
 {
     public class BuyTicketModel : BasePageModel
     {
         [BindProperty]
-        public TicketDto Ticket { get; set; }
+        public DisplayTicketViewModel Ticket { get; set; }
 
         public async Task<IActionResult> OnGet(int id)
         {
@@ -24,7 +24,7 @@ namespace WebApp.Frontend.Pages.Tickets
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Ticket = await httpResponseMessage.Content.ReadFromJsonAsync<TicketDto>();
+                Ticket = await httpResponseMessage.Content.ReadFromJsonAsync<DisplayTicketViewModel>();
                 return Page();
             }
 

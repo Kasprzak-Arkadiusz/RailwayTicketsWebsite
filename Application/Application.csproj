@@ -21,7 +21,6 @@
   <ItemGroup>
     <Folder Include="SeatReservations\Queries\" />
     <Folder Include="Stations\Commands\" />
-    <Folder Include="Tickets\Queries\" />
     <Folder Include="Trains\Commands\" />
   </ItemGroup>
 

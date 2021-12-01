@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Tickets.Queries;
+using WebApp.Backend.Models;
+using WebApp.Frontend.Utils;
 
 namespace WebApp.Backend.Controllers
 {
@@ -31,9 +34,10 @@ namespace WebApp.Backend.Controllers
                        await Mediator.Send(new CreateSeatCommand { TrainId = routeDto.TrainId }, cancellationToken);
 
             //Pre-book a seat
+            //TODO When user resign free a seat
             var seatReservationId = await Mediator.Send(new CreateSeatReservationCommand { SeatId = seatDto.Id }, cancellationToken);
 
-            return Ok(new TicketDto
+            return Ok(new DisplayTicketViewModel
             {
                 DepartureTime = routeDto.DepartureTime,
                 ArrivalTime = routeDto.ArrivalTime,
@@ -46,6 +50,15 @@ namespace WebApp.Backend.Controllers
                 RouteId = routeDto.Id,
                 SeatReservationId = seatReservationId
             });
+        }
+
+        [HttpGet("userTickets/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserTicketsById(string id, CancellationToken cancellationToken)
+        {
+            var userTickets = await Mediator.Send(new GetUserTicketsQuery { UserId = id }, cancellationToken);
+
+            return Ok(userTickets);
         }
 
         [HttpPost]
