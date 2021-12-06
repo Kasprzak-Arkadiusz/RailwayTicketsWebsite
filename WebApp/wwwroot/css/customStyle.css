@@ -14,12 +14,16 @@ label {
     font-weight: bold;
 }
 
-h5, h4, h3, h2, h1, b{
+h5, h4, h3, h2, h1, b {
     margin-bottom: 1rem;
 }
 
 .top-margin-2 {
     margin-top: 2rem;
+}
+
+.btm-margin-1 {
+    margin-bottom: 1rem;
 }
 
 .detail-section-header {
@@ -34,4 +38,8 @@ h5, h4, h3, h2, h1, b{
     justify-content: flex-start;
     width: 100%;
     flex-direction: row;
+}
+
+.row {
+    justify-content: center;
 }

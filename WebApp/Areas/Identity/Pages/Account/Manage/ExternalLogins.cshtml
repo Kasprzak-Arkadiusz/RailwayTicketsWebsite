@@ -14,8 +14,8 @@
             @foreach (var login in Model.CurrentLogins)
             {
                 <tr>
-                    <td id="@($"login-provider-{login.LoginProvider}")">@login.ProviderDisplayName</td>
-                    <td>
+                    <td id="@($"login-provider-{login.LoginProvider}")" style="width: 160px;">@login.ProviderDisplayName</td>
+                    <td style="width: 160px;">
                         @if (Model.ShowRemoveButton)
                         {
                             <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
