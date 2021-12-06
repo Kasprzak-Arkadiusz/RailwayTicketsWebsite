@@ -32,13 +32,14 @@ namespace WebApp.Backend.Controllers
 
         [HttpGet("search")]
         public async Task<IActionResult> GetByParameters(string startingStationName,
-            string finalStationName, DateTime departureTime, CancellationToken cancellationToken)
+            string finalStationName, DateTime departureTime, bool suspended, CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetRoutesByParametersQuery
             {
                 StartingStation = startingStationName,
                 FinalStation = finalStationName,
-                DepartureTime = departureTime
+                DepartureTime = departureTime,
+                Suspended = suspended
             }, cancellationToken));
         }
 

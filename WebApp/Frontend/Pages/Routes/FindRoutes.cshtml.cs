@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -28,7 +29,9 @@ namespace WebApp.Frontend.Pages.Routes
             [DataType(DataType.Time)]
             [DisplayFormat(DataFormatString = "{0:HH:mm}")]
             [Display(Name = "Departure time")]
-            public DateTime DepartureTime { get; init; }
+            public DateTime? DepartureTime { get; init; }
+
+            public bool Suspended { get; set; }
         }
 
         public async Task OnGetAsync()
@@ -59,7 +62,11 @@ namespace WebApp.Frontend.Pages.Routes
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query["startingStationName"] = Input.From;
             query["finalStationName"] = Input.To;
-            query["departureTime"] = Input.DepartureTime.ToString("HH:mm");
+            query["suspended"] = Input.Suspended.ToString();
+            query["departureTime"] = Input.DepartureTime == null 
+                ? DateTime.MinValue.ToString(CultureInfo.CurrentCulture) 
+                : Input.DepartureTime.Value.ToString("HH:mm");
+
             uriBuilder.Query = query.ToString() ?? string.Empty;
             var url = uriBuilder.ToString();
 

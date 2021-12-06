@@ -28,3 +28,10 @@ h5, h4, h3, h2, h1, b{
     font-size: larger;
     width: 100%;
 }
+
+.container-route {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    flex-direction: row;
+}

@@ -15,6 +15,7 @@ namespace Application.Routes.Queries
         public string StartingStation { get; set; }
         public string FinalStation { get; set; }
         public DateTime DepartureTime { get; set; }
+        public bool Suspended { get; set; }
     }
 
     public class GetRoutesWithConditionsQueryHandler : IRequestHandler<GetRoutesByParametersQuery, IEnumerable<RouteDto>>
@@ -26,7 +27,6 @@ namespace Application.Routes.Queries
             _context = context;
         }
 
-        //TODO Return only routes that are not suspended
         public async Task<IEnumerable<RouteDto>> Handle(GetRoutesByParametersQuery request, CancellationToken cancellationToken)
         {
             var queryBuilder = _context.Routes.AsQueryable();
@@ -44,6 +44,8 @@ namespace Application.Routes.Queries
             {
                 queryBuilder = queryBuilder.Where(r => r.DepartureTime >= request.DepartureTime);
             }
+
+            queryBuilder = queryBuilder.Where(r => r.IsSuspended == request.Suspended);
 
             var routes = await queryBuilder.Select(route => new RouteDto
             {

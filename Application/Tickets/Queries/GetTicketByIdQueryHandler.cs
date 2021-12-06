@@ -19,8 +19,6 @@ namespace Application.Tickets.Queries
 
         public async Task<TicketDto> Handle(GetTicketByIdQuery request, CancellationToken cancellationToken)
         {
-
-            //TODO accessing SeatReservation when it is null
             var ticket = await _context.Tickets.Where(t => t.Id == request.Id).Select(ticket => new
             {
                 ticket.Id,

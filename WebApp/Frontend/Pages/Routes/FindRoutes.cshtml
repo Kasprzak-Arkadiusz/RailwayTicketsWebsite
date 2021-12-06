@@ -1,5 +1,4 @@
 ﻿@page
-@using WebApp.Frontend.Utils
 @model WebApp.Frontend.Pages.Routes.FindRoutesModel
 
 <div class="row justify-content-center">
@@ -22,6 +21,10 @@
                 <span asp-validation-for="Input.DepartureTime" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input class="form-check-input" data-val="true" type="checkbox" value="true" name="Input.Suspended" id="IsSuspended"/>
+                <label class="form-check-label" for="IsSuspended">Show suspended</label>
+            </div>
+            <div class="form-group">
                 <input type="hidden" name="showAll" value="false"/>
                 <input type="submit" class="btn btn-primary" style="font-size: 16px" value="Find routes"/>
             </div>
@@ -33,9 +36,9 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="text-left" style="font-size: 12px; margin-top: 1rem;">
-        <a asp-page="/Routes/Create" class="btn btn-success">
+<div class="container-route">
+    <div>
+        <a asp-page="/Routes/Create" class="btn btn-success" style="float: left;">
             Create a new route
         </a>
     </div>
