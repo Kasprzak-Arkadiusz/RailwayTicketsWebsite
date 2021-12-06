@@ -29,7 +29,6 @@ namespace Application.Seats.Commands.CreateSeat
                 throw new NotFoundException("A train couldn't be found.");
             }
 
-            //TODO get only required properties
             var createdSeats = await _context.Seats
                 .Include(s => s.Train)
                 .Include(s => s.SeatReservation)

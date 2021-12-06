@@ -13,12 +13,14 @@ namespace WebApp.Backend.Controllers
     public class RouteController : BaseApiController
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetAllRoutesQuery(), cancellationToken));
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
@@ -31,6 +33,7 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByParameters(string startingStationName,
             string finalStationName, DateTime departureTime, bool suspended, CancellationToken cancellationToken)
         {
@@ -44,7 +47,7 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreateRouteCommand command, CancellationToken cancellationToken)
         {
@@ -52,13 +55,15 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete(int id)
         {
             return Ok(await Mediator.Send(new DeleteRouteCommand() { Id = id }));
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRouteCommand command, CancellationToken cancellationToken)
         {

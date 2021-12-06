@@ -54,5 +54,19 @@ namespace WebApp.Frontend.Pages.BuyingTickets
             var postResponse = await httpResponseMessage.Content.ReadAsStringAsync();
             return RedirectToPage("./BuyingError", new { postResponse });
         }
+
+        public async Task<IActionResult> OnPostCancel(int seatReservationId)
+        {
+            var client = HttpClientFactory.CreateClient("api");
+            var actionPath = $"SeatReservation/{seatReservationId}";
+
+            var httpResponseMessage = await client.DeleteAsync(actionPath);
+
+            if (httpResponseMessage.IsSuccessStatusCode)
+                return RedirectToPage("/Routes/FindRoutes");
+
+            var postResponse = await httpResponseMessage.Content.ReadAsStringAsync();
+            return RedirectToPage("./BuyingError", new { postResponse });
+        }
     }
 }
