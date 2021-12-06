@@ -3,6 +3,8 @@
 @{
 }
 
+<h3>Your tickets</h3>
+
 <div class="row">
     <table class="table table-striped">
         <thead>
@@ -15,8 +17,16 @@
             <th>Actions</th>
         </tr>
         </thead>
+        
+        @if (!Model.Tickets.Any())
+        {
+            <tbody>
+            </tbody>
+            return;
+        }
 
         <tbody>
+        
         @foreach (var item in Model.Tickets)
         {
             <tr>
@@ -26,7 +36,7 @@
                 <td>@Html.DisplayFor(modelItem => item.ArrivalTime.TimeOfDay)</td>
                 <td>@Html.DisplayFor(modelItem => item.TrainIdentifier)</td>
                 <td>
-                    <a asp-page="/ReturnTickets/Return" asp-route-id="@item.Id" class="btn btn-warning">Return</a>
+                    <a asp-page="/ReturningTickets/ReturnTicket" asp-route-id="@item.Id" class="btn btn-warning">Return</a>
                     <a asp-page="/UserTickets/Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
                 </td>
             </tr>

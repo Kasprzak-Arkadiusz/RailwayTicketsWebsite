@@ -26,15 +26,6 @@ namespace Infrastructure.Persistence
         public DbSet<Train> Trains { get; set; }
         public DbSet<SeatReservation> SeatReservations { get; set; }
 
-        //Test if it is needed
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS1;Database=TrainDB;User Id=adminuser;Password=123");
-            }
-        }*/
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

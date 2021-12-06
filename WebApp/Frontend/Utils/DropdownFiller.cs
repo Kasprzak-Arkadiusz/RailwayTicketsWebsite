@@ -1,7 +1,7 @@
 ﻿using Application.Common.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WebApp.Frontend.Utils
@@ -17,7 +17,7 @@ namespace WebApp.Frontend.Utils
                     Text = i.Name
                 }).ToList();
 
-            if (stationList == null)
+            if (!stationList.Any())
             {
                 throw new ArgumentNullException($"List {nameof(stations)} is empty.");
             }
@@ -34,12 +34,29 @@ namespace WebApp.Frontend.Utils
                     Text = i.TrainId.ToString()
                 }).ToList();
 
-            if (trainList == null)
+            if (!trainList.Any())
             {
                 throw new ArgumentNullException($"List {nameof(trains)} is empty.");
             }
 
             return trainList;
+        }
+
+        internal static List<SelectListItem> FillReasonsDropdown(IEnumerable<string> reasons)
+        {
+            var reasonsList = reasons.Select(r =>
+                new SelectListItem
+                {
+                    Value = r,
+                    Text = r
+                }).ToList();
+
+            if (!reasonsList.Any())
+            {
+                throw new ArgumentNullException($"List {nameof(reasons)} is empty.");
+            }
+
+            return reasonsList;
         }
     }
 }

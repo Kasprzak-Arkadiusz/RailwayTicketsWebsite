@@ -7,8 +7,6 @@ namespace Infrastructure.Persistence.Configuration
     public class SeatReservationConfiguration : IEntityTypeConfiguration<SeatReservation>
     {
         public void Configure(EntityTypeBuilder<SeatReservation> builder)
-        {
-            
-        }
+        { }
     }
 }

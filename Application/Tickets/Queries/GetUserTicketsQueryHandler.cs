@@ -20,24 +20,25 @@ namespace Application.Tickets.Queries
 
         public async Task<IEnumerable<TicketDto>> Handle(GetUserTicketsQuery request, CancellationToken cancellationToken)
         {
-            //TODO Really NOT effective query
-            /*var userTickets = _context.Tickets.Include(t => t.Route)
-                .Include(t => t.Train)
-                .Include(t => t.SeatReservations)
-                .ThenInclude(sr => sr.Seat)
-                .Where(t => t.OwnerId == request.UserId);*/
+            var userHasTickets = _context.Tickets.Where(t => t.OwnerId == request.UserId).Any(t => t.SeatReservations != null);
 
-            var userTickets = await _context.Tickets.Where(t => t.OwnerId == request.UserId).Select(ticket => new
+            if (!userHasTickets)
             {
-                ticket.Id,
-                StartingStation = ticket.Route.StartingStation.Name,
-                FinalStation = ticket.Route.FinalStation.Name,
-                ticket.Route.DepartureTime,
-                ticket.Route.ArrivalTime,
-                ticket.Train.TrainId,
-                Car = ticket.SeatReservations.Select(sr => sr.Seat.Car).First(),
-                SeatNumber = ticket.SeatReservations.Select(sr => sr.Seat.Number).First(),
-            }).ToListAsync(cancellationToken);
+                return new List<TicketDto>();
+            }
+
+            var userTickets = await _context.Tickets.Where(t => t.OwnerId == request.UserId && t.SeatReservations != null)
+                .Select(ticket => new
+                {
+                    ticket.Id,
+                    StartingStation = ticket.Route.StartingStation.Name,
+                    FinalStation = ticket.Route.FinalStation.Name,
+                    ticket.Route.DepartureTime,
+                    ticket.Route.ArrivalTime,
+                    ticket.Train.TrainId,
+                    Car = ticket.SeatReservations.Select(sr => sr.Seat.Car).FirstOrDefault(),
+                    SeatNumber = ticket.SeatReservations.Select(sr => sr.Seat.Number).FirstOrDefault(),
+                }).ToListAsync(cancellationToken);
 
             var userTicketsDto = userTickets.Select(ticket => new TicketDto
             {

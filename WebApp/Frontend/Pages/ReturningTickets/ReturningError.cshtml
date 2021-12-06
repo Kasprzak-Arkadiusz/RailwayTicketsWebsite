@@ -1,0 +1,18 @@
+﻿@page
+@model WebApp.Frontend.Pages.ReturningTickets.ReturningErrorModel
+@{
+}
+
+<h3>Returning a ticket</h3>
+<hr />
+
+<h4 class="font-weight-bold">When processing your request an error occurred.</h4>
+<div class="justify-content-md-center">
+    <div class="alert-danger alert">
+        @Model.Error
+    </div>
+
+    <form method="post" class="container" style="margin-top: 1rem">
+        <a class="btn btn-secondary" asp-page="/UserTickets/UserTickets">Back to your tickets</a>
+    </form>
+</div>

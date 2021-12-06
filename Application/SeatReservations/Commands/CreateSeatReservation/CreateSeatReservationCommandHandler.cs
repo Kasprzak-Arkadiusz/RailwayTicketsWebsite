@@ -1,10 +1,10 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Application.SeatReservations.Commands
+namespace Application.SeatReservations.Commands.CreateSeatReservation
 {
     public class CreateSeatReservationCommandHandler : IRequestHandler<CreateSeatReservationCommand, int>
     {

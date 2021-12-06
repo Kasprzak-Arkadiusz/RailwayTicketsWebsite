@@ -43,7 +43,8 @@ namespace WebApp
                 c.DefaultRequestHeaders.Add("Keep-Alive", "3600");
             });
 
-            services.AddRazorPages().AddRazorRuntimeCompilation(); ;
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddMemoryCache();
             services.AddMvc().AddRazorPagesOptions(opt =>
             {
                 opt.RootDirectory = "/Frontend/Pages";

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -49,14 +48,14 @@ namespace WebApp.Frontend.Pages.Routes
         {
             if (!ModelState.IsValid || showAll)
             {
-               await OnGetAsync();
-               return;
+                await OnGetAsync();
+                return;
             }
 
             var client = HttpClientFactory.CreateClient("api");
             const string actionPath = "Route/search";
             var uriBuilder = new UriBuilder(client.BaseAddress + actionPath);
-            
+
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query["startingStationName"] = Input.From;
             query["finalStationName"] = Input.To;

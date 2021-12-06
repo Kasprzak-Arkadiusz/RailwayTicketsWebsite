@@ -1,16 +1,14 @@
-﻿using Application.Common.DTOs;
-using Application.Routes.Queries;
-using Application.SeatReservations.Commands;
+﻿using Application.Routes.Queries;
+using Application.SeatReservations.Commands.CreateSeatReservation;
 using Application.Seats.Commands.CreateSeat;
 using Application.Seats.Queries;
 using Application.Tickets.Commands.CreateTicket;
+using Application.Tickets.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Tickets.Queries;
 using WebApp.Backend.Models;
-using WebApp.Frontend.Utils;
 
 namespace WebApp.Backend.Controllers
 {
@@ -50,6 +48,21 @@ namespace WebApp.Backend.Controllers
                 RouteId = routeDto.Id,
                 SeatReservationId = seatReservationId
             });
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTicketById(int id, CancellationToken cancellationToken)
+        {
+            var ticket = await Mediator.Send(new GetTicketByIdQuery { Id = id }, cancellationToken);
+
+            if (ticket is null)
+            {
+                return NotFound("Your ticket could not be found.");
+            }
+
+            return Ok(ticket);
         }
 
         [HttpGet("userTickets/{id}")]

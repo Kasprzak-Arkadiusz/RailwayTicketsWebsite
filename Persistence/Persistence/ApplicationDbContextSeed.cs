@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Common.Constants;
 
 namespace Infrastructure.Persistence
 {
@@ -94,16 +95,10 @@ namespace Infrastructure.Persistence
                 };
                 context.Tickets.AddRange(tickets);
 
-                //Change GenericReasonOfReturn when enum for it will be created
                 var returnedTickets = new List<ReturnedTicket>
                 {
-                    new()
-                    {
-                        Ticket = tickets[1],
-                        DateOfReturn = new DateTime(2021, 11, 6),
-                        GenericReasonOfReturn = "The reason for my ride is no longer valid.",
-                        PersonalReasonOfReturn = "Due to change in my personal affairs i don't see point in traveling by train."
-                    }
+                    new(userId, GenericReasonsOfReturn.ReasonsList[1],
+                        "Due to change in my personal affairs i don't see point in traveling by train", tickets[1], seats[1],new DateTime(2021, 11, 6))
                 };
 
                 context.ReturnedTickets.AddRange(returnedTickets);

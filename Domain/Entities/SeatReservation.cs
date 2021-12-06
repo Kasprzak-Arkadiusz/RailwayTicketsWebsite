@@ -1,5 +1,4 @@
 ﻿using Domain.Common;
-using System;
 
 namespace Domain.Entities
 {
@@ -18,7 +17,6 @@ namespace Domain.Entities
 
         public SeatReservation()
         {
-            
         }
     }
 }

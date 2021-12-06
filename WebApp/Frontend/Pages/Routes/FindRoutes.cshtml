@@ -44,7 +44,7 @@
 @{
     if (Model.WasFiltered)
     {
-        if (Model.Routes.IsAny())
+        if (Model.Routes.Any())
         {
             <div class="alert-info alert top-margin-2">
                 Found @Model.Routes.Count results.
@@ -84,7 +84,7 @@
                     <td>
                         <a asp-page="/Routes/Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
                         <a asp-page="/Routes/Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                        <a asp-page="/Tickets/BuyTicket" asp-route-id="@item.Id" class="btn btn-success">Buy ticket</a>
+                        <a asp-page="/BuyingTickets/BuyTicket" asp-route-id="@item.Id" class="btn btn-success">Buy ticket</a>
                     </td>
                 </tr>
             }

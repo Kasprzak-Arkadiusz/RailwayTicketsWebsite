@@ -19,16 +19,13 @@ namespace Infrastructure.Persistence.Configuration
 
             builder.HasMany(ti => ti.SeatReservations)
                 .WithOne(sr => sr.Ticket)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_Tickets_SeatReservations");
 
             builder.HasOne(ti => ti.Train)
                 .WithMany(tr => tr.Tickets)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Tickets_Trains");
-
-            builder.HasMany(d => d.ReturnedTickets)
-                .WithOne(p => p.Ticket)
-                .HasConstraintName("fk_ReturnedTickets_Tickets");
         }
     }
 }

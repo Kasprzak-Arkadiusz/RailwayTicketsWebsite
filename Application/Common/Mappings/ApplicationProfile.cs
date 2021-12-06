@@ -2,7 +2,7 @@
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Mappings
+namespace Application.Common.Mappings
 {
     public class ApplicationProfile : Profile
     {

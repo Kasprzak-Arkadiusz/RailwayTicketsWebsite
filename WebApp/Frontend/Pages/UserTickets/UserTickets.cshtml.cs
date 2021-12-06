@@ -14,16 +14,13 @@ namespace WebApp.Frontend.Pages.UserTickets
 
         public async Task<IActionResult> OnGet()
         {
-            //Get current user id
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            //Send request for his tickets
             var client = HttpClientFactory.CreateClient("api");
 
             var userTicketsPath = $"Ticket/userTickets/{currentUserId}";
             var httpResponseMessage = await client.GetAsync(userTicketsPath);
 
-            //Add his tickets to viewModel
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 Tickets = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<TicketDto>>();

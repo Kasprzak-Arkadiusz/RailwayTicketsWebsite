@@ -10,7 +10,6 @@ namespace Domain.Entities
         public Route Route { get; set; }
         public ICollection<SeatReservation> SeatReservations { get; set; }
         public Train Train { get; set; }
-        public ICollection<ReturnedTicket> ReturnedTickets { get; set; }
 
         public Ticket(string ownerId, Route route, Train train, SeatReservation seatReservation)
         {
