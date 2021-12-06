@@ -1,0 +1,115 @@
+﻿@page
+@model WebApp.Frontend.Pages.ViewReturnedTickets.DetailsModel
+
+<h3>Details</h3>
+<hr />
+
+<div class="justify-content-md-center">
+    <div class="row justify-content-center">
+        <b class="col-sm-6 detail-section-header">
+            Details of the person returning ticket
+        </b>
+        <div class="w-100"></div>
+        <hr class="w-50">
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Email of the person returning the ticket:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.OwnerEmail)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-6 detail-section-header">
+            Return details
+        </b>
+        <div class="w-100"></div>
+        <hr class="w-50">
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Date of return:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.DateOfReturn)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Generic reason for the return:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.GenericReasonOfReturn)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Personal reason for the return:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.PersonalReasonOfReturn)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-6 detail-section-header">
+            Route details
+        </b>
+        <div class="w-100"></div>
+        <hr class="w-50">
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Departure time:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.DepartureTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Arrival time:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.ArrivalTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Starting station:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.StartingStationName)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Final station:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.FinalStationName)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-6 detail-section-header">
+            Train details
+        </b>
+        <div class="w-100"></div>
+        <hr class="w-50">
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Train identifier:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.TrainId)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Car number:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.Car)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayName("Seat number:")
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.ReturnedTicket.Number)
+        </div>
+        <div class="w-100"></div>
+    </div>
+    
+    <div class="container" style="margin-top: 1rem">
+        <a class="btn btn-secondary"  asp-page="/ViewReturnedTickets/ViewReturnedTickets">Back to List</a>
+    </div>
+</div>

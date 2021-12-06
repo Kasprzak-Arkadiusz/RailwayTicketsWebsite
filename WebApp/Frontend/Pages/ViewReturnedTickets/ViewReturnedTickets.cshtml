@@ -1,0 +1,42 @@
+﻿@page
+@model WebApp.Frontend.Pages.ViewReturnedTickets.ViewReturnedTicketsModel
+
+
+<h3>Returned tickets</h3>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Date of return</th>
+            <th>Starting station</th>
+            <th>Final station</th>
+            <th>Generic reason of return</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        
+        @if (!Model.ReturnedTickets.Any())
+        {
+            <tbody>
+            </tbody>
+            return;
+        }
+
+        <tbody>
+        
+        @foreach (var item in Model.ReturnedTickets)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.DateOfReturn)</td>
+                <td>@Html.DisplayFor(modelItem => item.StartingStationName)</td>
+                <td>@Html.DisplayFor(modelItem => item.FinalStationName)</td>
+                <td>@Html.DisplayFor(modelItem => item.GenericReasonOfReturn)</td>
+                <td>
+                    <a asp-page="/ViewReturnedTickets/Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

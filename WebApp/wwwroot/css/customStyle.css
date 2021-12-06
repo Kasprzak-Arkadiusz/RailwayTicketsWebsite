@@ -6,7 +6,7 @@ table {
     margin: 10px;
 }
 
-input {
+input, select {
     text-align: center;
 }
 
@@ -22,6 +22,9 @@ h5, h4, h3, h2, h1, b{
     margin-top: 2rem;
 }
 
-select {
-    text-align: center
+.detail-section-header {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    font-size: larger;
+    width: 100%;
 }

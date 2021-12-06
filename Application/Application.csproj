@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ReturnedTickets\Queries\" />
     <Folder Include="Seats\Commands\UpdateSeat\" />
     <Folder Include="Stations\Commands\" />
     <Folder Include="Trains\Commands\" />
