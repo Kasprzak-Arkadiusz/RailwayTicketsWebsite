@@ -3,7 +3,6 @@ using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -43,14 +42,12 @@ namespace WebApp
             });
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
-            services.AddMemoryCache();
-            services.AddMvc().AddRazorPagesOptions(opt =>
-            {
-                opt.RootDirectory = "/Frontend/Pages";
-            });
 
-            services.AddHttpContextAccessor();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddMvc()
+                .AddRazorPagesOptions(opt =>
+                {
+                    opt.RootDirectory = "/Frontend/Pages";
+                });
 
             services.AddAuthentication()
                 .AddGoogle(options =>
@@ -88,8 +85,6 @@ namespace WebApp
             {
                 app.UseHsts();
             }
-
-            //app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

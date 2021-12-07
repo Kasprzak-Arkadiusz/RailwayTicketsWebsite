@@ -1,5 +1,6 @@
 using Application.Common.DTOs;
 using Application.ReturnedTickets.Commands.CreateReturnedTicket;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.ReturningTickets
 {
+    [Authorize]
     public class ReturnTicketModel : BasePageModel
     {
         [BindProperty]

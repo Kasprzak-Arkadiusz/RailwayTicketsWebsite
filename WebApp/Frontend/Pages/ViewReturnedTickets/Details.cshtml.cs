@@ -1,11 +1,14 @@
 using Application.Common.DTOs;
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using WebApp.Backend.Middleware.Authorization;
 using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.ViewReturnedTickets
 {
+    [AuthorizeByRole(Role.Employee, Role.Admin)]
     public class DetailsModel : BasePageModel
     {
         [BindProperty]

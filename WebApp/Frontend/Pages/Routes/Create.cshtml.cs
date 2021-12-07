@@ -1,4 +1,5 @@
 ﻿using Application.Common.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -7,11 +8,14 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Identity.Enums;
+using WebApp.Backend.Middleware.Authorization;
 using WebApp.Frontend.Common;
 using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.Routes
 {
+    [AuthorizeByRole(Role.Employee, Role.Admin)]
     public class CreateModel : BasePageModel
     {
         [BindProperty]

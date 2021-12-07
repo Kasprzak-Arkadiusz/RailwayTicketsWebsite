@@ -32,7 +32,6 @@ namespace WebApp.Backend.Controllers
                        await Mediator.Send(new CreateSeatCommand { TrainId = routeDto.TrainId }, cancellationToken);
 
             //Pre-book a seat
-            //TODO When user resign free a seat
             var seatReservationId = await Mediator.Send(new CreateSeatReservationCommand { SeatId = seatDto.Id }, cancellationToken);
 
             return Ok(new DisplayTicketViewModel

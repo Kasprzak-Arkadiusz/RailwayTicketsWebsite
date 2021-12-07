@@ -1,3 +1,4 @@
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -5,11 +6,13 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using WebApp.Backend.Middleware.Authorization;
 using WebApp.Backend.Models;
 using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.BuyingTickets
 {
+    [AuthorizeByRole(Role.User, Role.Admin)]
     public class BuyTicketModel : BasePageModel
     {
         [BindProperty]

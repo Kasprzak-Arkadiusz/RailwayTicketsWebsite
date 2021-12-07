@@ -1,4 +1,5 @@
 ﻿using Application.Common.DTOs;
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -8,12 +9,14 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using WebApp.Backend.Middleware.Authorization;
 using WebApp.Backend.Models;
 using WebApp.Frontend.Common;
 using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.Routes
 {
+    [AuthorizeByRole(Role.Employee, Role.Admin)]
     public class EditModel : BasePageModel
     {
         [BindProperty]
@@ -91,14 +94,14 @@ namespace WebApp.Frontend.Pages.Routes
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var httpResponseMessage = await client.PutAsync(actionPath, content);
 
-            if (httpResponseMessage.IsSuccessStatusCode) 
+            if (httpResponseMessage.IsSuccessStatusCode)
                 return RedirectToPage("./FindRoutes");
 
             var postResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ErrorDetails>();
 
             if (postResponse?.Errors == null)
             {
-                if (postResponse != null) 
+                if (postResponse != null)
                     Errors.Add(postResponse.Details);
                 return await OnGetAsync(Route.Id);
             }

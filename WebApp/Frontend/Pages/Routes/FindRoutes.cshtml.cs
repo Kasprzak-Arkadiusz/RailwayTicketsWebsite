@@ -1,4 +1,5 @@
 using Application.Common.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.Routes
 {
+    [Authorize]
     public class FindRoutesModel : BasePageModel
     {
         [BindProperty]
@@ -63,8 +65,8 @@ namespace WebApp.Frontend.Pages.Routes
             query["startingStationName"] = Input.From;
             query["finalStationName"] = Input.To;
             query["suspended"] = Input.Suspended.ToString();
-            query["departureTime"] = Input.DepartureTime == null 
-                ? DateTime.MinValue.ToString(CultureInfo.CurrentCulture) 
+            query["departureTime"] = Input.DepartureTime == null
+                ? DateTime.MinValue.ToString(CultureInfo.CurrentCulture)
                 : Input.DepartureTime.Value.ToString("HH:mm");
 
             uriBuilder.Query = query.ToString() ?? string.Empty;

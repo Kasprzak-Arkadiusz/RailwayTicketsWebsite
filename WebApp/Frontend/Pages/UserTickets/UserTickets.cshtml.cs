@@ -1,13 +1,16 @@
 using Application.Common.DTOs;
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WebApp.Backend.Middleware.Authorization;
 using WebApp.Frontend.Common;
 
 namespace WebApp.Frontend.Pages.UserTickets
 {
+    [AuthorizeByRole(Role.User, Role.Admin)]
     public class UserTicketsModel : BasePageModel
     {
         public IEnumerable<TicketDto> Tickets { get; set; }
