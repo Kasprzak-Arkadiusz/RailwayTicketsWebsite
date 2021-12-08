@@ -2,12 +2,10 @@
 using Application.Common.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -18,52 +16,28 @@ namespace Infrastructure.Identity
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-        private readonly IAuthorizationService _authorizationService;
 
         public IdentityService(
             UserManager<ApplicationUser> userManager,
-            IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-            IAuthorizationService authorizationService,
             RoleManager<IdentityRole> roleManager,
             IMapper mapper)
         {
             _userManager = userManager;
-            _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
-            _authorizationService = authorizationService;
             _roleManager = roleManager;
             _mapper = mapper;
         }
 
-        public async Task<string> GetUserNameAsync(string userId)
+        public async Task<string> GetUserEmailAsync(string userId)
         {
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
-            return user.UserName;
+            return user.Email;
         }
 
         public async Task<string> GetUserIdByUserName(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
             return user.Id;
-        }
-
-        public async Task<bool> IsInRoleAsync(string userId, string role)
-        {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
-
-            return await _userManager.IsInRoleAsync(user, role);
-        }
-
-        public async Task<bool> AuthorizeAsync(string userId, string policyName)
-        {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
-
-            var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-
-            var result = await _authorizationService.AuthorizeAsync(principal, policyName);
-
-            return result.Succeeded;
         }
 
         public async Task<Result> EnsureUserIsInRoleAsync(string userId, string role)

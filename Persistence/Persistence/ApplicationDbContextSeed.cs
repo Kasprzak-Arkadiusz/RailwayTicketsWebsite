@@ -95,9 +95,11 @@ namespace Infrastructure.Persistence
                 };
                 context.Tickets.AddRange(tickets);
 
+                var userEmail = await identityService.GetUserEmailAsync(userId);
+
                 var returnedTickets = new List<ReturnedTicket>
                 {
-                    new(userId, GenericReasonsOfReturn.ReasonsList[1],
+                    new(userEmail, GenericReasonsOfReturn.ReasonsList[1],
                         "Due to change in my personal affairs i don't see point in traveling by train", tickets[1], seats[1],new DateTime(2021, 11, 6))
                 };
 
