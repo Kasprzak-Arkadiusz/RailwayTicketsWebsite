@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 
-namespace WebApp.Backend.Models
+namespace WebApp.Backend.Middleware.ExceptionHandling
 {
     public class ErrorDetails
     {

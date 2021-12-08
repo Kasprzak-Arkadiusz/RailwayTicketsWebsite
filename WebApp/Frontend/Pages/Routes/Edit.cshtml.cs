@@ -1,7 +1,7 @@
 ﻿using Application.Common.DTOs;
+using Application.Routes.Commands.UpdateRoute;
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,10 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.Backend.Middleware.Authorization;
-using WebApp.Backend.Models;
+using WebApp.Backend.Middleware.ExceptionHandling;
 using WebApp.Frontend.Common;
 using WebApp.Frontend.Utils;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.Routes
 {
@@ -20,16 +20,7 @@ namespace WebApp.Frontend.Pages.Routes
     public class EditModel : BasePageModel
     {
         [BindProperty]
-        public RouteDto Route { get; set; }
-
-        [BindProperty]
-        public IList<SelectListItem> StartingStations { get; set; }
-
-        [BindProperty]
-        public IList<SelectListItem> FinalStations { get; set; }
-
-        [BindProperty]
-        public IList<SelectListItem> TrainIds { get; set; }
+        public CreateRouteViewModel Route { get; set; }
 
         public IList<string> Errors { get; set; } = new List<string>();
 
@@ -46,7 +37,7 @@ namespace WebApp.Frontend.Pages.Routes
             if (!routeResponseMessage.IsSuccessStatusCode)
                 return NotFound();
 
-            Route = await client.GetFromJsonAsync<RouteDto>(routePath);
+            Route = await client.GetFromJsonAsync<CreateRouteViewModel>(routePath);
 
             const string stationsPath = "Station";
             var stationResponseMessage = await client.GetAsync(stationsPath);
@@ -60,37 +51,42 @@ namespace WebApp.Frontend.Pages.Routes
             var stations = await stationResponseMessage.Content.ReadFromJsonAsync<IList<StationDto>>();
             var trains = await trainResponseMessage.Content.ReadFromJsonAsync<IList<TrainDto>>();
 
-            TrainIds = DropdownFiller.FillTrainIdsDropdown(trains);
-            StartingStations = DropdownFiller.FillStationsDropdown(stations);
-            FinalStations = DropdownFiller.FillStationsDropdown(stations);
+            Route.TrainIds = DropdownFiller.FillTrainIdsDropdown(trains);
+            Route.StartingStations = DropdownFiller.FillStationsDropdown(stations);
+            Route.FinalStations = DropdownFiller.FillStationsDropdown(stations);
 
-            var selectedTrain = TrainIds.First(i => i.Value == Route.TrainId.ToString());
+            var selectedTrain = Route.TrainIds.First(i => i.Value == Route.TrainId.ToString());
             selectedTrain.Selected = true;
 
-            var selectedFrom = StartingStations.First(i => i.Value == Route.StartingStation);
+            var selectedFrom = Route.StartingStations.First(i => i.Value == Route.StartingStation);
             selectedFrom.Selected = true;
 
-            var selectedTo = FinalStations.First(i => i.Value == Route.FinalStation);
+            var selectedTo = Route.FinalStations.First(i => i.Value == Route.FinalStation);
             selectedTo.Selected = true;
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (!ModelState.IsValid)
-                return Page();
+                return await OnGetAsync(id);
 
-            Route.StartingStation = Request.Form["From"];
-            Route.FinalStation = Request.Form["To"];
-            Route.TrainId = short.Parse(Request.Form["TrainId"]);
-            var test = Request.Form["Route.IsSuspended"];
-            Route.IsSuspended = bool.Parse(test);
+            var command = new UpdateRouteCommand
+            {
+                StartingStation = Route.StartingStation,
+                FinalStation = Route.FinalStation,
+                TrainId = Route.TrainId,
+                DepartureTime = Route.DepartureTime,
+                ArrivalTime = Route.ArrivalTime,
+                IsSuspended = Route.IsSuspended,
+                Id = Route.Id
+            };
 
             var client = HttpClientFactory.CreateClient("api");
             var actionPath = $"Route/{Route.Id}";
 
-            var json = JsonConvert.SerializeObject(Route);
+            var json = JsonConvert.SerializeObject(command);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var httpResponseMessage = await client.PutAsync(actionPath, content);
 

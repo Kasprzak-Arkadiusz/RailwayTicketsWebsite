@@ -33,7 +33,7 @@ namespace Application.Routes.Queries
                 DepartureTime = route.DepartureTime,
                 IsSuspended = route.IsSuspended,
                 TrainId = route.Train.TrainId
-            }).ToListAsync(cancellationToken);
+            }).Where(r => r.IsSuspended == false).ToListAsync(cancellationToken);
 
             return routes.AsReadOnly();
         }

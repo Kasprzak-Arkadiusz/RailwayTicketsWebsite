@@ -6,9 +6,10 @@ using Application.Tickets.Commands.CreateTicket;
 using Application.Tickets.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using WebApp.Backend.Models;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Backend.Controllers
 {
@@ -34,7 +35,7 @@ namespace WebApp.Backend.Controllers
             //Pre-book a seat
             var seatReservationId = await Mediator.Send(new CreateSeatReservationCommand { SeatId = seatDto.Id }, cancellationToken);
 
-            return Ok(new DisplayTicketViewModel
+            var displayTicketViewModel = new DisplayTicketViewModel
             {
                 DepartureTime = routeDto.DepartureTime,
                 ArrivalTime = routeDto.ArrivalTime,
@@ -46,7 +47,9 @@ namespace WebApp.Backend.Controllers
                 TrainId = routeDto.TrainId,
                 RouteId = routeDto.Id,
                 SeatReservationId = seatReservationId
-            });
+            };
+
+            return Ok(displayTicketViewModel);
         }
 
         [HttpGet("{id}")]
@@ -60,8 +63,9 @@ namespace WebApp.Backend.Controllers
             {
                 return NotFound("Your ticket could not be found.");
             }
+            var returnTicketViewModel = Mapper.Map<ReturningTicketViewModel>(ticket);
 
-            return Ok(ticket);
+            return Ok(returnTicketViewModel);
         }
 
         [HttpGet("userTickets/{id}")]
@@ -70,7 +74,9 @@ namespace WebApp.Backend.Controllers
         {
             var userTickets = await Mediator.Send(new GetUserTicketsQuery { UserId = id }, cancellationToken);
 
-            return Ok(userTickets);
+            var returnTicketViewModel = Mapper.Map<IEnumerable<TicketViewModel>>(userTickets);
+
+            return Ok(returnTicketViewModel);
         }
 
         [HttpPost]

@@ -34,7 +34,7 @@ namespace Application.Routes.Commands.UpdateRoute
 
             entity.DepartureTime = request.DepartureTime;
             entity.ArrivalTime = request.ArrivalTime;
-            entity.IsSuspended = request.IsOnHold;
+            entity.IsSuspended = request.IsSuspended;
             entity.StartingStation = startingStation ?? throw new NotFoundException("A starting station couldn't be found.");
             entity.FinalStation = finalStation ?? throw new NotFoundException("A final station couldn't be found.");
             entity.Train = train ?? throw new NotFoundException("A train couldn't be found.");

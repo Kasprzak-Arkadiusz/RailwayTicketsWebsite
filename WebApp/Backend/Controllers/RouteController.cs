@@ -5,8 +5,10 @@ using Application.Routes.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Backend.Controllers
 {
@@ -16,7 +18,11 @@ namespace WebApp.Backend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetAllRoutesQuery(), cancellationToken));
+            var result = await Mediator.Send(new GetAllRoutesQuery(), cancellationToken);
+
+            var routeViewModel = Mapper.Map<IEnumerable<RouteViewModel>>(result);
+
+            return Ok(routeViewModel);
         }
 
         [HttpGet("{id}")]
@@ -29,7 +35,9 @@ namespace WebApp.Backend.Controllers
             if (result is null)
                 return NotFound("Requested route couldn't be found.");
 
-            return Ok(result);
+            var routeViewModel = Mapper.Map<RouteViewModel>(result);
+
+            return Ok(routeViewModel);
         }
 
         [HttpGet("search")]
@@ -37,13 +45,17 @@ namespace WebApp.Backend.Controllers
         public async Task<IActionResult> GetByParameters(string startingStationName,
             string finalStationName, DateTime departureTime, bool suspended, CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetRoutesByParametersQuery
+            var result = await Mediator.Send(new GetRoutesByParametersQuery
             {
                 StartingStation = startingStationName,
                 FinalStation = finalStationName,
                 DepartureTime = departureTime,
                 Suspended = suspended
-            }, cancellationToken));
+            }, cancellationToken);
+
+            var routeViewModels =  Mapper.Map<IEnumerable<RouteViewModel>>(result);
+
+            return Ok(routeViewModels);
         }
 
         [HttpPost]
@@ -51,14 +63,19 @@ namespace WebApp.Backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreateRouteCommand command, CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(command, cancellationToken));
+            var result = await Mediator.Send(command, cancellationToken);
+
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(int id)
         {
-            return Ok(await Mediator.Send(new DeleteRouteCommand() { Id = id }));
+            await Mediator.Send(new DeleteRouteCommand { Id = id });
+
+            return Ok();
         }
 
         [HttpPut("{id}")]
@@ -70,7 +87,9 @@ namespace WebApp.Backend.Controllers
             if (id != command.Id)
                 return BadRequest();
 
-            return Ok(await Mediator.Send(command, cancellationToken));
+            await Mediator.Send(command, cancellationToken);
+
+            return Ok();
         }
     }
 }

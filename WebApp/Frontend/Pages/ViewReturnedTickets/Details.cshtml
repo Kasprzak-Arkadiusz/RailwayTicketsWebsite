@@ -13,7 +13,7 @@
         <hr class="w-50">
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Email of the person returning the ticket:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.OwnerEmail)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.OwnerEmail)
@@ -26,21 +26,21 @@
         <hr class="w-50">
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Date of return:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.DateOfReturn)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.DateOfReturn)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Generic reason for the return:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.GenericReasonOfReturn)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.GenericReasonOfReturn)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Personal reason for the return:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.PersonalReasonOfReturn)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.PersonalReasonOfReturn)
@@ -53,28 +53,28 @@
         <hr class="w-50">
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Departure time:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.DepartureTime)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.DepartureTime)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Arrival time:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.ArrivalTime)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.ArrivalTime)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Starting station:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.StartingStationName)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.StartingStationName)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Final station:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.FinalStationName)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.FinalStationName)
@@ -87,21 +87,21 @@
         <hr class="w-50">
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Train identifier:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.TrainIdentifier)
         </b>
         <div class="col-sm-4">
-            @Html.DisplayFor(model => model.ReturnedTicket.TrainId)
+            @Html.DisplayFor(model => model.ReturnedTicket.TrainIdentifier)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Car number:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.Car)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.Car)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Seat number:")
+            @Html.DisplayNameFor(model => model.ReturnedTicket.Number)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.ReturnedTicket.Number)

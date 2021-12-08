@@ -1,12 +1,12 @@
-﻿using Application.Common.DTOs;
-using Infrastructure.Identity.Enums;
+﻿using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using WebApp.Backend.Middleware.Authorization;
-using WebApp.Backend.Models;
+using WebApp.Backend.Middleware.ExceptionHandling;
 using WebApp.Frontend.Common;
+using WebApp.Frontend.Utils;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.Routes
 {
@@ -14,9 +14,9 @@ namespace WebApp.Frontend.Pages.Routes
     public class DeleteModel : BasePageModel
     {
         [BindProperty]
-        public RouteDto Route { get; set; }
+        public RouteViewModel Route { get; set; }
 
-        public IList<string> Errors { get; set; } = new List<string>();
+        public IList<string> Errors { get; } = new List<string>();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,7 +28,7 @@ namespace WebApp.Frontend.Pages.Routes
             var httpResponseMessage = await client.GetAsync(actionPath);
 
             if (httpResponseMessage.IsSuccessStatusCode)
-                Route = await httpResponseMessage.Content.ReadFromJsonAsync<RouteDto>();
+                Route = await httpResponseMessage.Content.ReadFromJsonAsync<RouteViewModel>();
 
             if (Route == null)
                 return NotFound();

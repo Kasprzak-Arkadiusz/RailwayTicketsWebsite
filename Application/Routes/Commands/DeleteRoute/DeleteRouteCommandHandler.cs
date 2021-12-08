@@ -35,13 +35,7 @@ namespace Application.Routes.Commands.DeleteRoute
 
             if (!entity.IsSuspended)
             {
-                throw new InvalidOperationException("A route cannot be deleted unless it's on hold.");
-            }
-
-            if (entity.Train is not null)
-            {
-                throw new InvalidOperationException("A route cannot be deleted if there are trains assigned to it." +
-                                                    " First, mark the route as suspended and unassign the trains to the route.");
+                throw new InvalidOperationException("A route cannot be deleted unless it's suspended.");
             }
 
             _context.Routes.Remove(entity);

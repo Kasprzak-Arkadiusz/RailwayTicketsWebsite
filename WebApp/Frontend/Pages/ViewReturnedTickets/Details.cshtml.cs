@@ -1,10 +1,10 @@
-using Application.Common.DTOs;
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using WebApp.Backend.Middleware.Authorization;
 using WebApp.Frontend.Common;
+using WebApp.Frontend.Utils;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.ViewReturnedTickets
 {
@@ -12,7 +12,7 @@ namespace WebApp.Frontend.Pages.ViewReturnedTickets
     public class DetailsModel : BasePageModel
     {
         [BindProperty]
-        public ReturnedTicketDto ReturnedTicket { get; set; }
+        public ReturnedTicketViewModel ReturnedTicket { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -24,7 +24,7 @@ namespace WebApp.Frontend.Pages.ViewReturnedTickets
             var httpResponseMessage = await client.GetAsync(actionPath);
 
             if (httpResponseMessage.IsSuccessStatusCode)
-                ReturnedTicket = await httpResponseMessage.Content.ReadFromJsonAsync<ReturnedTicketDto>();
+                ReturnedTicket = await httpResponseMessage.Content.ReadFromJsonAsync<ReturnedTicketViewModel>();
 
             if (ReturnedTicket == null)
                 return NotFound();

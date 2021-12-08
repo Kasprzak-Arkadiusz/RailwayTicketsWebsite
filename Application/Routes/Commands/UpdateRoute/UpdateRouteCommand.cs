@@ -8,7 +8,7 @@ namespace Application.Routes.Commands.UpdateRoute
         public int Id { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
-        public bool IsOnHold { get; set; }
+        public bool IsSuspended { get; set; }
         public string StartingStation { get; set; }
         public string FinalStation { get; set; }
         public short TrainId { get; set; }

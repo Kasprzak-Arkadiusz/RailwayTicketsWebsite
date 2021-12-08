@@ -10,7 +10,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
-using WebApp.Backend.Middleware;
+using WebApp.Backend.Middleware.ExceptionHandling;
 
 namespace WebApp
 {
@@ -85,6 +85,8 @@ namespace WebApp
             {
                 app.UseHsts();
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

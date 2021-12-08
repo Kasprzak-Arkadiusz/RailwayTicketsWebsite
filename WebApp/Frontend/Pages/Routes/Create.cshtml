@@ -4,43 +4,61 @@
 <h3>Creating a new Route</h3>
 <hr />
 <div class="row justify-content-center">
+    @foreach (var error in Model.Errors)
+    {
+        <div class="alert-danger alert w-100">
+            @error
+        </div>
+    }
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label>Departure time:</label>
+                @Html.DisplayNameFor(model => model.Route.DepartureTime)
                 <input asp-for="Route.DepartureTime" type="time" asp-format="{0:HH:mm}" class="form-control"/>
                 <span asp-validation-for="Route.DepartureTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Arrival time:</label>
+                @Html.DisplayNameFor(model => model.Route.ArrivalTime)
                 <input asp-for="Route.ArrivalTime" type="time" asp-format="{0:HH:mm}" class="form-control"/>
                 <span asp-validation-for="Route.ArrivalTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="container">From:</label>
-                <select asp-items="Model.StartingStations" name="From"> </select>
-                <span asp-validation-for="Route.StartingStation" class="text-danger"></span>
+                @Html.LabelFor(model => model.Route.StartingStation, new { @class = "col-form-label" })
+                <div class="form-text">
+                    @Html.DropDownListFor(model => model.Route.StartingStation, Model.Route.StartingStations,
+                        "--Select the starting station--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Route.StartingStation, "",
+                        new { @class = "text-danger" })
+                </div>
             </div>
             <div class="form-group">
-                <label class="container">To:</label>
-                <select asp-items="Model.FinalStations" name="To"> </select>
-                <span asp-validation-for="Route.FinalStation" class="text-danger"></span>
+                @Html.LabelFor(model => model.Route.FinalStation, new { @class = "col-form-label" })
+                <div class="form-text">
+                    @Html.DropDownListFor(model => model.Route.FinalStation, Model.Route.FinalStations,
+                        "--Select the final station--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Route.FinalStation, "",
+                        new { @class = "text-danger" })
+                </div>
             </div>
             <div class="form-group">
-                <label class="container">Train id:</label>
-                <select asp-items="Model.TrainIds" name="TrainId"> </select>
-                <span asp-validation-for="Route.TrainId" class="text-danger"></span>
+                @Html.LabelFor(model => model.Route.TrainId, new { @class = "col-form-label" })
+                <div class="form-text">
+                    @Html.DropDownListFor(model => model.Route.TrainId, Model.Route.TrainIds,
+                        "--Select train identifier--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Route.TrainId, "",
+                        new { @class = "text-danger" })
+                </div>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Route.IsSuspended" name="IsSuspended"/> 
-                    @Html.DisplayName("Is suspended?")
+                    <input class="form-check-input" asp-for="Route.IsSuspended"/>
+                    @Html.DisplayNameFor(model => model.Route.IsSuspended)
                 </label>
             </div>
-            @Html.Hidden("Route.Id", Model.Route?.Id ?? 0)
+            @Html.Hidden("Route.Id", Model.Route.Id)
             <div class="form-group">
-                <a class="btn btn-secondary" asp-page="/Routes/FindRoutes">Back to List</a> 
+                <a class="btn btn-secondary" asp-page="/Routes/FindRoutes">Back to List</a>
                 <input type="submit" value="Create" class="btn btn-success"/>
             </div>
         </form>

@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Authorization;
 
-namespace WebApp.Backend.Middleware.Authorization
+namespace WebApp.Frontend.Utils
 {
     public class AuthorizeByRoleAttribute : AuthorizeAttribute
     {

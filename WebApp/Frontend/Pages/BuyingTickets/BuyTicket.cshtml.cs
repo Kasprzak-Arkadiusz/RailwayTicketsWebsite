@@ -1,3 +1,4 @@
+using Application.Tickets.Commands.CreateTicket;
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -6,9 +7,9 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.Backend.Middleware.Authorization;
-using WebApp.Backend.Models;
 using WebApp.Frontend.Common;
+using WebApp.Frontend.Utils;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.BuyingTickets
 {
@@ -39,15 +40,15 @@ namespace WebApp.Frontend.Pages.BuyingTickets
             var client = HttpClientFactory.CreateClient("api");
             const string actionPath = "Ticket";
 
-            var requestBody = new CreateTicketRequestBody
+            var command = new CreateTicketCommand
             {
-                OwnerId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
                 RouteId = routeId,
                 TrainId = (short)trainId,
                 SeatReservationId = seatReservationId
             };
 
-            var json = JsonConvert.SerializeObject(requestBody);
+            var json = JsonConvert.SerializeObject(command);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var httpResponseMessage = await client.PostAsync(actionPath, content);
 

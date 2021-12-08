@@ -44,7 +44,7 @@ namespace Application.Routes.Commands.CreateRoute
             {
                 DepartureTime = request.DepartureTime,
                 ArrivalTime = request.ArrivalTime,
-                IsSuspended = request.IsOnHold,
+                IsSuspended = request.IsSuspended,
                 StartingStation = startingStation,
                 FinalStation = finalStation,
                 Train = train

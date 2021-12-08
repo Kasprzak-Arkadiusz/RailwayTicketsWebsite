@@ -1,5 +1,6 @@
 ﻿using Application.Common.DTOs;
-using Microsoft.AspNetCore.Authorization;
+using Application.Routes.Commands.CreateRoute;
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -8,27 +9,18 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.Identity.Enums;
-using WebApp.Backend.Middleware.Authorization;
+using WebApp.Backend.Middleware.ExceptionHandling;
 using WebApp.Frontend.Common;
 using WebApp.Frontend.Utils;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.Routes
 {
     [AuthorizeByRole(Role.Employee, Role.Admin)]
     public class CreateModel : BasePageModel
     {
-        [BindProperty]
-        public RouteDto Route { get; set; }
-
-        [BindProperty]
-        public IList<SelectListItem> StartingStations { get; set; }
-
-        [BindProperty]
-        public IList<SelectListItem> FinalStations { get; set; }
-
-        [BindProperty]
-        public IList<SelectListItem> TrainIds { get; set; }
+        [BindProperty] public CreateRouteViewModel Route { get; set; } = new();
+        public IList<string> Errors { get; } = new List<string>();
 
         public async Task<IActionResult> OnGet()
         {
@@ -46,9 +38,9 @@ namespace WebApp.Frontend.Pages.Routes
             var stations = await stationResponseMessage.Content.ReadFromJsonAsync<IList<StationDto>>();
             var trains = await trainResponseMessage.Content.ReadFromJsonAsync<IList<TrainDto>>();
 
-            TrainIds = DropdownFiller.FillTrainIdsDropdown(trains);
-            StartingStations = DropdownFiller.FillStationsDropdown(stations);
-            FinalStations = new List<SelectListItem>(StartingStations);
+            Route.TrainIds = DropdownFiller.FillTrainIdsDropdown(trains);
+            Route.StartingStations = DropdownFiller.FillStationsDropdown(stations);
+            Route.FinalStations = new List<SelectListItem>(Route.StartingStations);
 
             return Page();
         }
@@ -57,24 +49,42 @@ namespace WebApp.Frontend.Pages.Routes
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await OnGet();
             }
 
-            Route.StartingStation = Request.Form["From"];
-            Route.FinalStation = Request.Form["To"];
-            Route.TrainId = short.Parse(Request.Form["TrainId"]);
-            Route.IsSuspended = bool.Parse(Request.Form["IsSuspended"]);
+            var command = new CreateRouteCommand
+            {
+                StartingStation = Route.StartingStation,
+                FinalStation = Route.FinalStation,
+                TrainId = Route.TrainId,
+                IsSuspended = Route.IsSuspended,
+                DepartureTime = Route.DepartureTime,
+                ArrivalTime = Route.ArrivalTime
+            };
 
             var client = HttpClientFactory.CreateClient("api");
-            const string actionPath = "Route/";
+            const string actionPath = "Route";
 
-            var json = JsonConvert.SerializeObject(Route);
+            var json = JsonConvert.SerializeObject(command);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var httpResponseMessage = await client.PostAsync(actionPath, content);
 
-            httpResponseMessage.EnsureSuccessStatusCode();
+            if (httpResponseMessage.IsSuccessStatusCode)
+                return RedirectToPage("/Routes/FindRoutes");
 
-            return RedirectToPage("/Routes/FindRoutes");
+            var postResponse = await httpResponseMessage.Content.ReadFromJsonAsync<ErrorDetails>();
+
+            if (postResponse?.Errors == null)
+            {
+                if (postResponse != null)
+                    Errors.Add(postResponse.Details);
+                return await OnGet();
+            }
+
+            foreach (var (_, value) in postResponse.Errors)
+                Errors.Add(string.Join("\n", value));
+
+            return await OnGet();
         }
     }
 }

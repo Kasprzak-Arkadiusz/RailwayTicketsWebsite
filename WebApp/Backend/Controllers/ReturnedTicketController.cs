@@ -1,10 +1,12 @@
-﻿using Application.ReturnedTickets.Commands.CreateReturnedTicket;
+﻿using System.Collections.Generic;
+using Application.ReturnedTickets.Commands.CreateReturnedTicket;
 using Application.ReturnedTickets.Queries;
 using Application.Tickets.Commands.DeleteTicket;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Backend.Controllers
 {
@@ -14,7 +16,10 @@ namespace WebApp.Backend.Controllers
         public async Task<ActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetAllReturnedTicketsQuery(), cancellationToken);
-            return Ok(result);
+
+            var returnedTickets = Mapper.Map<IEnumerable<ReturnedTicketViewModel>>(result);
+
+            return Ok(returnedTickets);
         }
 
         [HttpGet("{id}")]
@@ -26,7 +31,9 @@ namespace WebApp.Backend.Controllers
             if (result is null)
                 return NotFound("Requested returned ticket could not be found.");
 
-            return Ok(result);
+            var returnedTicket = Mapper.Map<ReturnedTicketViewModel>(result);
+
+            return Ok(returnedTicket);
         }
 
         [HttpPost]

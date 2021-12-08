@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace Application.Common.DTOs
+namespace WebApp.Frontend.ViewModels
 {
-    public class TicketDto
+    public class ReturningTicketViewModel
     {
         public int Id { get; set; }
 
@@ -27,5 +30,15 @@ namespace Application.Common.DTOs
 
         [DisplayName("Seat number:")]
         public short SeatNumber { get; set; }
+
+        public IList<SelectListItem> GenericReasonsOfReturn { get; set; }
+
+        [Required]
+        [DisplayName("Generic reason of return:")]
+        public string GenericReasonOfReturn { get; set; }
+
+        [Required]
+        [DisplayName("Personal reason of return:")]
+        public string PersonalReasonOfReturn { get; set; }
     }
 }

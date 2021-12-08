@@ -15,35 +15,35 @@
 
     <div class="row justify-content-center">
         <b class="col-sm-2">
-            @Html.DisplayName("Departure time:")
+            @Html.DisplayNameFor(model => model.Route.DepartureTime)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.Route.DepartureTime)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Arrival time:")
+            @Html.DisplayNameFor(model => model.Route.ArrivalTime)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.Route.ArrivalTime)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("From:")
+            @Html.DisplayNameFor(model => model.Route.StartingStation)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.Route.StartingStation)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("To:")
+            @Html.DisplayNameFor(model => model.Route.FinalStation)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.Route.FinalStation)
         </div>
         <div class="w-100"></div>
         <b class="col-sm-2">
-            @Html.DisplayName("Is suspended?")
+            @Html.DisplayNameFor(model => model.Route.IsSuspended)
         </b>
         <div class="col-sm-4">
             @Html.DisplayFor(model => model.Route.IsSuspended)

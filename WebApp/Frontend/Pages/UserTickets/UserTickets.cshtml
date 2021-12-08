@@ -7,11 +7,11 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Starting station</th>
-            <th>Final station</th>
-            <th>Departure time</th>
-            <th>Arrival Time</th>
-            <th>Train identifier</th>
+            <th>@Html.DisplayNameFor(model => model.Tickets.First().StartingStation)</th>
+            <th>@Html.DisplayNameFor(model => model.Tickets.First().FinalStation)</th>
+            <th>@Html.DisplayNameFor(model => model.Tickets.First().DepartureTime)</th>
+            <th>@Html.DisplayNameFor(model => model.Tickets.First().ArrivalTime)</th>
+            <th>@Html.DisplayNameFor(model => model.Tickets.First().TrainIdentifier)</th>
             <th>Actions</th>
         </tr>
         </thead>

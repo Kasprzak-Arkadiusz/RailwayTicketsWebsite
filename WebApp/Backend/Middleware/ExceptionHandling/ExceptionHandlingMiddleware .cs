@@ -1,15 +1,14 @@
 ﻿using System;
-using Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Domain.Common.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Serilog;
-using WebApp.Backend.Models;
 using ApplicationException = Domain.Common.Exceptions.ApplicationException;
 
-namespace WebApp.Backend.Middleware
+namespace WebApp.Backend.Middleware.ExceptionHandling
 {
     internal sealed class ExceptionHandlingMiddleware : IMiddleware
 {
@@ -45,6 +44,7 @@ namespace WebApp.Backend.Middleware
         exception switch
         {
             BadRequestException => StatusCodes.Status400BadRequest,
+            InvalidOperationException => StatusCodes.Status400BadRequest,
             ArgumentOutOfRangeException => StatusCodes.Status400BadRequest,
             NotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status422UnprocessableEntity,

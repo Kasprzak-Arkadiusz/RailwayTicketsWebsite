@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Web;
 using WebApp.Frontend.Common;
+using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.Routes
 {
@@ -16,25 +16,11 @@ namespace WebApp.Frontend.Pages.Routes
     public class FindRoutesModel : BasePageModel
     {
         [BindProperty]
-        public InputModel Input { get; init; }
+        public FindRoutesViewModel Input { get; init; }
 
-        public IList<RouteDto> Routes { get; private set; } = new List<RouteDto>();
+        public IList<RouteViewModel> Routes { get; private set; } = new List<RouteViewModel>();
 
         public bool WasFiltered { get; set; }
-
-        public class InputModel
-        {
-            public string From { get; init; }
-
-            public string To { get; init; }
-
-            [DataType(DataType.Time)]
-            [DisplayFormat(DataFormatString = "{0:HH:mm}")]
-            [Display(Name = "Departure time")]
-            public DateTime? DepartureTime { get; init; }
-
-            public bool Suspended { get; set; }
-        }
 
         public async Task OnGetAsync()
         {
@@ -45,7 +31,7 @@ namespace WebApp.Frontend.Pages.Routes
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IList<RouteDto>>();
+                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IList<RouteViewModel>>();
             }
         }
 
@@ -76,7 +62,7 @@ namespace WebApp.Frontend.Pages.Routes
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IList<RouteDto>>();
+                Routes = await httpResponseMessage.Content.ReadFromJsonAsync<IList<RouteViewModel>>();
             }
 
             WasFiltered = true;

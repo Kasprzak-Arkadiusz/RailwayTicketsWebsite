@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Application.Common.DTOs
+namespace WebApp.Frontend.ViewModels
 {
-    public class TicketDto
+    public class DisplayTicketViewModel
     {
-        public int Id { get; set; }
-
         [DisplayName("Departure time:")]
         public DateTime DepartureTime { get; set; }
 
@@ -27,5 +25,9 @@ namespace Application.Common.DTOs
 
         [DisplayName("Seat number:")]
         public short SeatNumber { get; set; }
+
+        public int TrainId { get; set; }
+        public int RouteId { get; set; }
+        public int SeatReservationId { get; set; }
     }
 }

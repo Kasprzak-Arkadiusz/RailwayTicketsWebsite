@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Application.Common.DTOs
+namespace WebApp.Frontend.ViewModels
 {
-    public class TicketDto
+    public class RouteViewModel
     {
         public int Id { get; set; }
 
@@ -20,12 +20,10 @@ namespace Application.Common.DTOs
         public string FinalStation { get; set; }
 
         [DisplayName("Train identifier:")]
-        public short TrainIdentifier { get; set; }
+        public short TrainId { get; set; }
 
-        [DisplayName("Car number:")]
-        public byte Car { get; set; }
+        [DisplayName("Is suspended?")]
+        public bool IsSuspended { get; set; }
 
-        [DisplayName("Seat number:")]
-        public short SeatNumber { get; set; }
     }
 }

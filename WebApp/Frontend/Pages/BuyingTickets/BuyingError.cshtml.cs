@@ -1,6 +1,6 @@
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WebApp.Backend.Middleware.Authorization;
+using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.BuyingTickets
 {
