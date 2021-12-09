@@ -1,0 +1,63 @@
+﻿@page
+@model WebApp.Frontend.Pages.UserTickets.DetailsModel
+
+<h3>Details</h3>
+<hr />
+
+<div class="justify-content-md-center">
+    <div class="row justify-content-center">
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.DepartureTime)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.DepartureTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.ArrivalTime)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.ArrivalTime)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.StartingStation)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.StartingStation)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.FinalStation)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.FinalStation)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.TrainIdentifier)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.TrainIdentifier)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.Car)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.Car)
+        </div>
+        <div class="w-100"></div>
+        <b class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserTicket.SeatNumber)
+        </b>
+        <div class="col-sm-4">
+            @Html.DisplayFor(model => model.UserTicket.SeatNumber)
+        </div>
+        <div class="w-100"></div>
+    </div>
+    
+    <div class="container" style="margin-top: 1rem">
+        <a class="btn btn-secondary"  asp-page="/UserTickets/UserTickets">Back to your tickets</a>
+    </div>
+</div>

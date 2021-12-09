@@ -21,5 +21,11 @@ namespace WebApp.Frontend.ViewModels
 
         [DisplayName("Train identifier:")]
         public short TrainIdentifier { get; set; }
+
+        [DisplayName("Car number:")]
+        public byte Car { get; set; }
+
+        [DisplayName("Seat number:")]
+        public short SeatNumber { get; set; }
     }
 }

@@ -70,7 +70,7 @@ namespace WebApp.Backend.Controllers
 
         [HttpGet("userTickets/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserTicketsById(string id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUserTicketsByUserId(string id, CancellationToken cancellationToken)
         {
             var userTickets = await Mediator.Send(new GetUserTicketsQuery { UserId = id }, cancellationToken);
 
