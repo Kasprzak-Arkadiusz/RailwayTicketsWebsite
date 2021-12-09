@@ -2,11 +2,14 @@ using Application.Tickets.Commands.CreateTicket;
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Globalization;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using WebApp.Frontend.Common;
 using WebApp.Frontend.Utils;
 using WebApp.Frontend.ViewModels;
@@ -59,12 +62,21 @@ namespace WebApp.Frontend.Pages.BuyingTickets
             return RedirectToPage("./BuyingError", new { postResponse });
         }
 
-        public async Task<IActionResult> OnPostCancel(int seatReservationId)
+        public async Task<IActionResult> OnPostCancel(int seatReservationId, int routeId)
         {
             var client = HttpClientFactory.CreateClient("api");
-            var actionPath = $"SeatReservation/{seatReservationId}";
+            const string actionPath = "SeatReservation";
 
-            var httpResponseMessage = await client.DeleteAsync(actionPath);
+            var uriBuilder = new UriBuilder(client.BaseAddress + actionPath);
+
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            query["routeId"] = routeId.ToString();
+            query["id"] = seatReservationId.ToString();
+
+            uriBuilder.Query = query.ToString() ?? string.Empty;
+            var url = uriBuilder.ToString();
+
+            var httpResponseMessage = await client.DeleteAsync(url);
 
             if (httpResponseMessage.IsSuccessStatusCode)
                 return RedirectToPage("/Routes/FindRoutes");

@@ -48,6 +48,7 @@
         <form asp-page-handler="cancel" method="post" style="margin-top: 1rem; float: left; width: 160px;">
             <input type="submit" value="Back to List" class="btn btn-secondary"/>
             <input asp-for="Ticket.SeatReservationId" type="hidden" name="SeatReservationId"/>
+            <input asp-for="Ticket.RouteId" type="hidden" name="routeId"/>
         </form>
         <form method="post" style="margin-top: 1rem; float: right; width: 160px;">
             <input asp-for="Ticket.TrainId" type="hidden" id="hiddenTrainId" name="TrainId"/>

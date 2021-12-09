@@ -30,8 +30,6 @@ namespace WebApp.Frontend.Pages.UserTickets
             }
 
             return Page();
-
-            //TODO Add details page
         }
     }
 }

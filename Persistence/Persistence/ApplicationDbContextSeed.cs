@@ -41,6 +41,7 @@ namespace Infrastructure.Persistence
                         FinalStation = stations[1],
                         DepartureTime = new DateTime(2021, 12, 18, 8, 0, 0),
                         ArrivalTime = new DateTime(2021, 12, 18, 13, 0, 0),
+                        NumberOfFreeSeats = --trains[0].NumberOfSeats,
                         IsSuspended = false,
                         Train = trains[0]
                     },
@@ -50,6 +51,7 @@ namespace Infrastructure.Persistence
                         FinalStation = stations[3],
                         DepartureTime = new DateTime(2021, 12, 18, 12, 0, 0),
                         ArrivalTime = new DateTime(2021, 12, 18, 17, 0, 0),
+                        NumberOfFreeSeats = --trains[1].NumberOfSeats,
                         IsSuspended = false,
                         Train = trains[1]
                     },
@@ -59,6 +61,7 @@ namespace Infrastructure.Persistence
                         FinalStation = stations[5],
                         DepartureTime = new DateTime(2021, 12, 18, 20, 0, 0),
                         ArrivalTime = new DateTime(2021, 12, 19, 1, 0, 0),
+                        NumberOfFreeSeats = --trains[2].NumberOfSeats,
                         IsSuspended = true,
                         Train = trains[2]
                     }
@@ -73,8 +76,6 @@ namespace Infrastructure.Persistence
                 };
                 context.Seats.AddRange(seats);
 
-                await context.SaveChangesAsync();
-
                 var seatReservations = new List<SeatReservation>()
                 {
                     new(seats[0]),
@@ -82,8 +83,6 @@ namespace Infrastructure.Persistence
                     new(seats[2])
                 };
                 context.SeatReservations.AddRange(seatReservations);
-
-                await context.SaveChangesAsync();
 
                 var userId = await identityService.GetUserIdByUserName("justAnUser");
 

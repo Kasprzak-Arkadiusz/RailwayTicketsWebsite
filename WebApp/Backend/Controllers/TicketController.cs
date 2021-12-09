@@ -1,4 +1,5 @@
-﻿using Application.Routes.Queries;
+﻿using Application.Routes.Commands.UpdateRoute;
+using Application.Routes.Queries;
 using Application.SeatReservations.Commands.CreateSeatReservation;
 using Application.Seats.Commands.CreateSeat;
 using Application.Seats.Queries;
@@ -29,11 +30,22 @@ namespace WebApp.Backend.Controllers
             }
 
             //Check if train has free seats
+            if (routeDto.NumberOfFreeSeats == 0)
+            {
+                return BadRequest("Tickets for this route have been sold out.");
+            }
+
             var seatDto = await Mediator.Send(new GetAnySeatQuery { TrainId = routeDto.TrainId }, cancellationToken) ??
-                       await Mediator.Send(new CreateSeatCommand { TrainId = routeDto.TrainId }, cancellationToken);
+                          await Mediator.Send(new CreateSeatCommand { TrainId = routeDto.TrainId }, cancellationToken);
 
             //Pre-book a seat
-            var seatReservationId = await Mediator.Send(new CreateSeatReservationCommand { SeatId = seatDto.Id }, cancellationToken);
+            var seatReservationId =
+                await Mediator.Send(new CreateSeatReservationCommand { SeatId = seatDto.Id }, cancellationToken);
+
+            //Reduce the number of free seats on the route
+            var updateRouteCommand = Mapper.Map<UpdateRouteCommand>(routeDto);
+            updateRouteCommand.NumberOfFreeSeats--;
+            await Mediator.Send(updateRouteCommand, cancellationToken);
 
             var displayTicketViewModel = new DisplayTicketViewModel
             {
@@ -65,7 +77,7 @@ namespace WebApp.Backend.Controllers
             }
             var returnTicketViewModel = Mapper.Map<ReturningTicketViewModel>(ticket);
 
-             return Ok(returnTicketViewModel);
+            return Ok(returnTicketViewModel);
         }
 
         [HttpGet("userTickets/{id}")]

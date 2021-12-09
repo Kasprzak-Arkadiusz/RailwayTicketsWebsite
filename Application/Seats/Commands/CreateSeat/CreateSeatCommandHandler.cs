@@ -47,8 +47,7 @@ namespace Application.Seats.Commands.CreateSeat
 
             if (createdSeats.Count - freeSeatsInTrain.Count == train.NumberOfSeats)
             {
-                throw new InvalidOperationException("Cannot create a seat with a number greater " +
-                                                    "than the total number of seats in the train.");
+                throw new InvalidOperationException("The train is full.");
             }
 
             var seatNumber = Enumerable.Range(1, train.NumberOfSeats).First(n => createdSeats.All(s => s.Number != n));

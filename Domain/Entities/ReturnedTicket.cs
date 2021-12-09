@@ -17,7 +17,8 @@ namespace Domain.Entities
         public short Number { get; set; }
         public short TrainId { get; set; }
 
-        public ReturnedTicket(string email, string genericReason, string personalReason, Ticket ticket, Seat seat, DateTime? dateOfReturn = null)
+        public ReturnedTicket(string email, string genericReason, string personalReason,
+            Ticket ticket, Seat seat, DateTime? dateOfReturn = null)
         {
             OwnerEmail = email;
             DateOfReturn = dateOfReturn ?? DateTime.Now;;
@@ -33,7 +34,6 @@ namespace Domain.Entities
         }
 
         public ReturnedTicket()
-        {
-        }
+        { }
     }
 }

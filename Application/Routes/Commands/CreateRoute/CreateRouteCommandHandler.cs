@@ -45,6 +45,7 @@ namespace Application.Routes.Commands.CreateRoute
                 DepartureTime = request.DepartureTime,
                 ArrivalTime = request.ArrivalTime,
                 IsSuspended = request.IsSuspended,
+                NumberOfFreeSeats = train.NumberOfSeats,
                 StartingStation = startingStation,
                 FinalStation = finalStation,
                 Train = train

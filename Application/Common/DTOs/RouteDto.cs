@@ -10,6 +10,7 @@ namespace Application.Common.DTOs
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         public bool IsSuspended { get; set; }
+        public short NumberOfFreeSeats { get; set; }
         public short TrainId { get; set; }
     }
 }
