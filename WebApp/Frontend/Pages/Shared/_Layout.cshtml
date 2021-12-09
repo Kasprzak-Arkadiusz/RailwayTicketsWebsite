@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Infrastructure.Identity.Enums
+@{
+    var isUser = User.IsInRole(Role.User.ToString());
+    var isEmployee = User.IsInRole(Role.Employee.ToString());
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,12 +28,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Routes/FindRoutes">Find routes</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/UserTickets/UserTickets">My tickets</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/ViewReturnedTickets/ViewReturnedTickets">Returned tickets</a>
-                        </li>
+                        @if (isUser)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/UserTickets/UserTickets">My tickets</a>
+                            </li>
+                        }
+                        @if (isEmployee)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/ViewReturnedTickets/ViewReturnedTickets">Returned tickets</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

@@ -8,7 +8,7 @@ using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.ViewReturnedTickets
 {
-    [AuthorizeByRole(Role.Employee, Role.Admin)]
+    [AuthorizeByRole(Role.Employee)]
     public class DetailsModel : BasePageModel
     {
         [BindProperty]

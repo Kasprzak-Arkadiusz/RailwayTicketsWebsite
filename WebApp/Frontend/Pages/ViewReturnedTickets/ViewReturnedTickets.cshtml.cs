@@ -9,7 +9,7 @@ using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.ViewReturnedTickets
 {
-    [AuthorizeByRole(Role.Employee, Role.Admin)]
+    [AuthorizeByRole(Role.Employee)]
     public class ViewReturnedTicketsModel : BasePageModel
     {
         public IEnumerable<ReturnedTicketViewModel> ReturnedTickets { get; set; }

@@ -8,7 +8,7 @@ using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.UserTickets
 {
-    [AuthorizeByRole(Role.Admin, Role.User)]
+    [AuthorizeByRole(Role.User)]
     public class DetailsModel : BasePageModel
     {
         public TicketViewModel UserTicket { get; set; }

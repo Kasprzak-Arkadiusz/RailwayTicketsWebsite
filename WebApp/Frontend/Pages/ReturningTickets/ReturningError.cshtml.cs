@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.ReturningTickets
 {
-    [Authorize]
+    [AuthorizeByRole(Role.User)]
     public class ReturningErrorModel : PageModel
     {
         public string Error { get; private set; }

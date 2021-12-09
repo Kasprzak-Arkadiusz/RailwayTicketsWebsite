@@ -4,7 +4,7 @@ using WebApp.Frontend.Utils;
 
 namespace WebApp.Frontend.Pages.BuyingTickets
 {
-    [AuthorizeByRole(Role.User, Role.Admin)]
+    [AuthorizeByRole(Role.User)]
     public class BuyingErrorModel : PageModel
     {
         public string Error { get; private set; }

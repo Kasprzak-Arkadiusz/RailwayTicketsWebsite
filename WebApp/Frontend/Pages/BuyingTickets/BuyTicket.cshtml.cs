@@ -13,7 +13,7 @@ using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.BuyingTickets
 {
-    [AuthorizeByRole(Role.User, Role.Admin)]
+    [AuthorizeByRole(Role.User)]
     public class BuyTicketModel : BasePageModel
     {
         [BindProperty]

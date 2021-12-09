@@ -8,10 +8,10 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Date of return</th>
-            <th>Starting station</th>
-            <th>Final station</th>
-            <th>Generic reason of return</th>
+            <th>@Html.DisplayNameFor(model => model.ReturnedTickets.First().DateOfReturn)</th>
+            <th>@Html.DisplayNameFor(model => model.ReturnedTickets.First().StartingStationName)</th>
+            <th>@Html.DisplayNameFor(model => model.ReturnedTickets.First().FinalStationName)</th>
+            <th>@Html.DisplayNameFor(model => model.ReturnedTickets.First().GenericReasonOfReturn)</th>
             <th>Actions</th>
         </tr>
         </thead>

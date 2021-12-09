@@ -65,7 +65,7 @@ namespace WebApp.Backend.Controllers
             }
             var returnTicketViewModel = Mapper.Map<ReturningTicketViewModel>(ticket);
 
-            return Ok(returnTicketViewModel);
+             return Ok(returnTicketViewModel);
         }
 
         [HttpGet("userTickets/{id}")]

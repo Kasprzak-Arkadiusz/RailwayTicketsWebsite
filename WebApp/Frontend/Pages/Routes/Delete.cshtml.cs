@@ -10,7 +10,7 @@ using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.Routes
 {
-    [AuthorizeByRole(Role.Employee, Role.Admin)]
+    [AuthorizeByRole(Role.Employee)]
     public class DeleteModel : BasePageModel
     {
         [BindProperty]

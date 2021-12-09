@@ -1,5 +1,11 @@
 ﻿@page
+@using Infrastructure.Identity.Enums
 @model WebApp.Frontend.Pages.Routes.FindRoutesModel
+
+@{
+    var isEmployee = User.IsInRole(Role.Employee.ToString());
+    var isUser = User.IsInRole(Role.User.ToString());
+}
 
 <div class="row justify-content-center">
     <div class="col-md-4">
@@ -20,10 +26,13 @@
                 <input asp-for="Input.DepartureTime" class="form-control" value="@DateTime.Now.ToString("HH:mm")"/>
                 <span asp-validation-for="Input.DepartureTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input class="form-check-input" data-val="true" type="checkbox" value="true" name="Input.Suspended" id="IsSuspended"/>
-                <label class="form-check-label" for="IsSuspended">Show suspended</label>
-            </div>
+            @if (isEmployee)
+            {
+                <div class="form-group">
+                    <input class="form-check-input" data-val="true" type="checkbox" value="true" name="Input.Suspended" id="IsSuspended"/>
+                    <label class="form-check-label" for="IsSuspended">Show suspended</label>
+                </div>
+            }
             <div class="form-group">
                 <input type="hidden" name="showAll" value="false"/>
                 <input type="submit" class="btn btn-primary" style="font-size: 16px" value="Find routes"/>
@@ -36,13 +45,16 @@
     </div>
 </div>
 
-<div class="custom-container">
-    <div>
-        <a asp-page="/Routes/Create" class="btn btn-success" style="float: left;">
-            Create a new route
-        </a>
+@if (isEmployee)
+{
+    <div class="custom-container">
+        <div>
+            <a asp-page="/Routes/Create" class="btn btn-success" style="float: left;">
+                Create a new route
+            </a>
+        </div>
     </div>
-</div>
+}
 
 @{
     if (Model.WasFiltered)
@@ -85,9 +97,15 @@
                     <td>@Html.DisplayFor(modelItem => item.ArrivalTime.TimeOfDay)</td>
                     <td>@Html.DisplayFor(modelItem => item.TrainId)</td>
                     <td>
+                    @if (isEmployee)
+                    {
                         <a asp-page="/Routes/Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
                         <a asp-page="/Routes/Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    }
+                    @if (isUser)
+                    {
                         <a asp-page="/BuyingTickets/BuyTicket" asp-route-id="@item.Id" class="btn btn-success">Buy ticket</a>
+                    }
                     </td>
                 </tr>
             }

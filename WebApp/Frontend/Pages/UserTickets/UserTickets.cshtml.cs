@@ -10,7 +10,7 @@ using WebApp.Frontend.ViewModels;
 
 namespace WebApp.Frontend.Pages.UserTickets
 {
-    [AuthorizeByRole(Role.User, Role.Admin)]
+    [AuthorizeByRole(Role.User)]
     public class UserTicketsModel : BasePageModel
     {
         public IEnumerable<TicketViewModel> Tickets { get; set; }
