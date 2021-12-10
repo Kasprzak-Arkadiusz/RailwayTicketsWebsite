@@ -13,6 +13,7 @@ namespace WebApp.Backend.Controllers
     public class ReturnedTicketController : BaseApiController
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetAllReturnedTicketsQuery(), cancellationToken);
@@ -23,6 +24,7 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetById(int id, CancellationToken cancellationToken)
         {
@@ -37,6 +39,9 @@ namespace WebApp.Backend.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> CreateReturnTicket([FromBody] CreateReturnedTicketCommand command, CancellationToken cancellationToken)
         {
             await Mediator.Send(command, cancellationToken);

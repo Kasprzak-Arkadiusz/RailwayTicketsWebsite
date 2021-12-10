@@ -2,7 +2,6 @@ using Application.Tickets.Commands.CreateTicket;
 using Infrastructure.Identity.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Globalization;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;

@@ -18,6 +18,7 @@ namespace WebApp.Backend.Controllers
     {
         [HttpGet("display/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetDisplayDataById(int id, CancellationToken cancellationToken)
         {
@@ -26,7 +27,7 @@ namespace WebApp.Backend.Controllers
 
             if (routeDto is null)
             {
-                return BadRequest("Requested route couldn't be found.");
+                return NotFound("Requested route couldn't be found.");
             }
 
             //Check if train has free seats
