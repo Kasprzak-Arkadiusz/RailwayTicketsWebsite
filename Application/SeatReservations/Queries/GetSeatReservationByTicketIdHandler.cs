@@ -1,17 +1,17 @@
-﻿using Application.Common.DTOs;
-using MediatR;
-using System;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
+using Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.SeatReservations.Queries
 {
-    public class GetSeatReservationByTicketIdHandler : IRequestHandler<GetSeatReservationByTicketId, SeatReservationDto>
+    public class GetSeatReservationByTicketIdHandler : IQueryHandler<GetSeatReservationByTicketId, SeatReservationDto>
     {
         private readonly IApplicationDbContext _context;
+
         public GetSeatReservationByTicketIdHandler(IApplicationDbContext context)
         {
             _context = context;

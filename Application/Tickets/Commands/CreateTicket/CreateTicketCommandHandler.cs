@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Application.Abstractions.Messaging;
 using Application.Common.Interfaces;
 using Domain.Entities;
-using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Tickets.Commands.CreateTicket
 {
-    public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, int>
+    public class CreateTicketCommandHandler : ICommandHandler<CreateTicketCommand, int>
     {
         private readonly IApplicationDbContext _context;
 

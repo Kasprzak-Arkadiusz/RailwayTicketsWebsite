@@ -1,22 +1,23 @@
-﻿using Application.Common.DTOs;
-using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.ReturnedTickets.Queries
 {
-    public class GetAllReturnedTicketsQuery : IRequest<IEnumerable<ReturnedTicketDto>>
+    public class GetAllReturnedTicketsQuery : IQuery<IEnumerable<ReturnedTicketDto>>
     { }
 
-    public class GetAllReturnedTicketsQueryHandler : IRequestHandler<GetAllReturnedTicketsQuery, IEnumerable<ReturnedTicketDto>>
+    public class GetAllReturnedTicketsQueryHandler : IQueryHandler<GetAllReturnedTicketsQuery, IEnumerable<ReturnedTicketDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+
         public GetAllReturnedTicketsQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;

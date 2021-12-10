@@ -1,14 +1,14 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
-using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Tickets.Queries
 {
-    public class GetTicketByIdQueryHandler : IRequestHandler<GetTicketByIdQuery, TicketDto>
+    public class GetTicketByIdQueryHandler : IQueryHandler<GetTicketByIdQuery, TicketDto>
     {
         private readonly IApplicationDbContext _context;
 

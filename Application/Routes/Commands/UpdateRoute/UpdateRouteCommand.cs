@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using Application.Abstractions.Messaging;
+using MediatR;
 using System;
 
 namespace Application.Routes.Commands.UpdateRoute
 {
-    public class UpdateRouteCommand : IRequest
+    public class UpdateRouteCommand : ICommand<Unit>
     {
         public int Id { get; set; }
         public string StartingStation { get; set; }

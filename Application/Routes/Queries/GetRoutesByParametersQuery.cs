@@ -1,6 +1,6 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Routes.Queries
 {
-    public class GetRoutesByParametersQuery : IRequest<IEnumerable<RouteDto>>
+    public class GetRoutesByParametersQuery : IQuery<IEnumerable<RouteDto>>
     {
         public string StartingStation { get; set; }
         public string FinalStation { get; set; }
@@ -18,7 +18,7 @@ namespace Application.Routes.Queries
         public bool Suspended { get; set; }
     }
 
-    public class GetRoutesWithConditionsQueryHandler : IRequestHandler<GetRoutesByParametersQuery, IEnumerable<RouteDto>>
+    public class GetRoutesWithConditionsQueryHandler : IQueryHandler<GetRoutesByParametersQuery, IEnumerable<RouteDto>>
     {
         private readonly IApplicationDbContext _context;
 

@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using Application.Abstractions.Messaging;
 using System;
 
 namespace Application.Routes.Commands.CreateRoute
 {
-    public class CreateRouteCommand : IRequest<int>
+    public class CreateRouteCommand : ICommand<int>
     {
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }

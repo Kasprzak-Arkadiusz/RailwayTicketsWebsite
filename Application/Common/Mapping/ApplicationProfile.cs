@@ -17,6 +17,7 @@ namespace Application.Common.Mapping
                 .ForMember(dest => dest.FinalStation, opt => opt.MapFrom(src => src.FinalStation.Name))
                 .ForMember(dest => dest.TrainId, opt => opt.MapFrom(src => src.Train.TrainId));
             CreateMap<ReturnedTicket, ReturnedTicketDto>();
+
             CreateMap<RouteDto, UpdateRouteCommand>();
         }
     }

@@ -1,4 +1,5 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Routes.Commands.UpdateRoute
 {
-    public class UpdateRouteCommandHandler : IRequestHandler<UpdateRouteCommand>
+    public class UpdateRouteCommandHandler : ICommandHandler<UpdateRouteCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
 

@@ -1,18 +1,18 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.ReturnedTickets.Queries
 {
-    public class GetReturnedTicketByIdQuery : IRequest<ReturnedTicketDto>
+    public class GetReturnedTicketByIdQuery : IQuery<ReturnedTicketDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetReturnedTicketByIdQueryHandler : IRequestHandler<GetReturnedTicketByIdQuery, ReturnedTicketDto>
+    public class GetReturnedTicketByIdQueryHandler : IQueryHandler<GetReturnedTicketByIdQuery, ReturnedTicketDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;

@@ -14,7 +14,7 @@ namespace Application
             var assembly = Assembly.GetExecutingAssembly();
 
             services.AddMediatR(assembly);
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateRouteCommandValidator>());
 
             return services;

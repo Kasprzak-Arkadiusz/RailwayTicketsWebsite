@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Infrastructure
 {
@@ -17,7 +18,10 @@ namespace Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), 
                     sqlOptions =>
                     {
-                        sqlOptions.EnableRetryOnFailure();
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 4,
+                            maxRetryDelay: TimeSpan.FromSeconds(1),
+                            errorNumbersToAdd: new int[] { });
                     }));
 
             services.AddDefaultIdentity<ApplicationUser>()

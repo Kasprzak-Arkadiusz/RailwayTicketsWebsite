@@ -1,6 +1,6 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Tickets.Queries
 {
-    public class GetUserTicketsQueryHandler : IRequestHandler<GetUserTicketsQuery, IEnumerable<TicketDto>>
+    public class GetUserTicketsQueryHandler : IQueryHandler<GetUserTicketsQuery, IEnumerable<TicketDto>>
     {
         private readonly IApplicationDbContext _context;
 

@@ -1,7 +1,7 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Application.Stations.Queries
 {
-    public class GetAllStationsQuery : IRequest<IEnumerable<StationDto>>
+    public class GetAllStationsQuery : IQuery<IEnumerable<StationDto>>
     { }
 
-    public class GetAllStationsQueryHandler : IRequestHandler<GetAllStationsQuery, IEnumerable<StationDto>>
+    public class GetAllStationsQueryHandler : IQueryHandler<GetAllStationsQuery, IEnumerable<StationDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;

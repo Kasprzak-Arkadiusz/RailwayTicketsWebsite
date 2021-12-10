@@ -1,12 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using Application.Abstractions.Messaging;
 using Application.Common.Interfaces;
 using Domain.Entities;
-using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.SeatReservations.Commands.CreateSeatReservation
 {
-    public class CreateSeatReservationCommandHandler : IRequestHandler<CreateSeatReservationCommand, int>
+    public class CreateSeatReservationCommandHandler : ICommandHandler<CreateSeatReservationCommand, int>
     {
         private readonly IApplicationDbContext _context;
 

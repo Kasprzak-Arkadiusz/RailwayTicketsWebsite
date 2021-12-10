@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using Application.Abstractions.Messaging;
 
 namespace Application.Tickets.Commands.CreateTicket
 {
-    public class CreateTicketCommand : IRequest<int>
+    public class CreateTicketCommand : ICommand<int>
     {
         public string OwnerId { get; set; }
         public short TrainId { get; set; }

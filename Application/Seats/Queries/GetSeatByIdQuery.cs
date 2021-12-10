@@ -1,18 +1,18 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using Application.Abstractions.Messaging;
 using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
-using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Seats.Queries
 {
-    public class GetSeatByIdQuery : IRequest<SeatDto>
+    public class GetSeatByIdQuery : IQuery<SeatDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetSeatByIdQueryHandler : IRequestHandler<GetSeatByIdQuery, SeatDto>
+    public class GetSeatByIdQueryHandler : IQueryHandler<GetSeatByIdQuery, SeatDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;

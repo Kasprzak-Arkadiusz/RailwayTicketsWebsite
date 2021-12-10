@@ -18,9 +18,4 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Stations\Commands\" />
-    <Folder Include="Trains\Commands\" />
-  </ItemGroup>
-
 </Project>

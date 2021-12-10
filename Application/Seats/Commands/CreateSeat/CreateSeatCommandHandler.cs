@@ -1,8 +1,8 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Seats.Commands.CreateSeat
 {
-    public class CreateSeatCommandHandler : IRequestHandler<CreateSeatCommand, SeatDto>
+    public class CreateSeatCommandHandler : ICommandHandler<CreateSeatCommand, SeatDto>
     {
         private readonly IApplicationDbContext _context;
 
@@ -63,7 +63,6 @@ namespace Application.Seats.Commands.CreateSeat
                 Car = seat.Car,
                 Number = seat.Number
             };
-
         }
     }
 }

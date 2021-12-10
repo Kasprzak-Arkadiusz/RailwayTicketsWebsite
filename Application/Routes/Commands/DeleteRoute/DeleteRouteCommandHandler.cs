@@ -7,10 +7,11 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Abstractions.Messaging;
 
 namespace Application.Routes.Commands.DeleteRoute
 {
-    public class DeleteRouteCommandHandler : IRequestHandler<DeleteRouteCommand>
+    public class DeleteRouteCommandHandler : ICommandHandler<DeleteRouteCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
 

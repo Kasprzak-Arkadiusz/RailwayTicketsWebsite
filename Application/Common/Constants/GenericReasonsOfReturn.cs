@@ -8,6 +8,7 @@ namespace Application.Common.Constants
         {
             "Booking error",
             "My plans have changed",
+            "I found a cheaper ticket",
             "Other"
         };
     }

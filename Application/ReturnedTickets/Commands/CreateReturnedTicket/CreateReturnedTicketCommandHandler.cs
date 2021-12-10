@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.ReturnedTickets.Commands.CreateReturnedTicket
 {
-    public class CreateReturnedTicketCommandHandler : IRequestHandler<CreateReturnedTicketCommand, Unit>
+    public class CreateReturnedTicketCommandHandler : ICommandHandler<CreateReturnedTicketCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
 

@@ -1,25 +1,27 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Application.Abstractions.Messaging;
 using Application.Common.DTOs;
 using Application.Common.Interfaces;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Seats.Queries
 {
-    public class GetAnySeatQuery : IRequest<SeatDto>
+    public class GetAnySeatQuery : IQuery<SeatDto>
     {
         public short TrainId { get; set; }
     }
 
-    public class GetAnySeatQueryHandler : IRequestHandler<GetAnySeatQuery, SeatDto>
+    public class GetAnySeatQueryHandler : IQueryHandler<GetAnySeatQuery, SeatDto>
     {
         private readonly IApplicationDbContext _context;
+
         public GetAnySeatQueryHandler(IApplicationDbContext context)
         {
             _context = context;
         }
+
         public async Task<SeatDto> Handle(GetAnySeatQuery request, CancellationToken cancellationToken)
         {
             var seat = await _context.Seats.Include(s => s.Train)

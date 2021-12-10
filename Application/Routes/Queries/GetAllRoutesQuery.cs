@@ -1,7 +1,6 @@
-﻿using Application.Common.Converters;
+﻿using Application.Abstractions.Messaging;
 using Application.Common.DTOs;
 using Application.Common.Interfaces;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Application.Routes.Queries
 {
-    public class GetAllRoutesQuery : IRequest<IEnumerable<RouteDto>>
+    public class GetAllRoutesQuery : IQuery<IEnumerable<RouteDto>>
     { }
 
-    public class GetAllRoutesQueryHandler : IRequestHandler<GetAllRoutesQuery, IEnumerable<RouteDto>>
+    public class GetAllRoutesQueryHandler : IQueryHandler<GetAllRoutesQuery, IEnumerable<RouteDto>>
     {
         private readonly IApplicationDbContext _context;
 

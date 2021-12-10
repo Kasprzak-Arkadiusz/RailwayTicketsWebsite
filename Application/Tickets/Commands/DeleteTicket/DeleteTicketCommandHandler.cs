@@ -1,4 +1,5 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using MediatR;
 using System.Threading;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Tickets.Commands.DeleteTicket
 {
-    public class DeleteTicketCommandHandler : IRequestHandler<DeleteTicketCommand>
+    public class DeleteTicketCommandHandler : ICommandHandler<DeleteTicketCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
 

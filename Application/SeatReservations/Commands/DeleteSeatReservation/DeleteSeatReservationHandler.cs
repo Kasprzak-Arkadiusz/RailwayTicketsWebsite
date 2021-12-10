@@ -1,12 +1,13 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Exceptions;
 
 namespace Application.SeatReservations.Commands.DeleteSeatReservation
 {
-    public class DeleteSeatReservationHandler : IRequestHandler<DeleteSeatReservation, Unit>
+    public class DeleteSeatReservationHandler : ICommandHandler<DeleteSeatReservation, Unit>
     {
         private readonly IApplicationDbContext _context;
 

@@ -1,14 +1,14 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Routes.Commands.CreateRoute
 {
-    public class CreateRouteCommandHandler : IRequestHandler<CreateRouteCommand, int>
+    public class CreateRouteCommandHandler : ICommandHandler<CreateRouteCommand, int>
     {
         private readonly IApplicationDbContext _context;
 

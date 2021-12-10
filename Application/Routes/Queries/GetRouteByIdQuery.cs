@@ -1,7 +1,7 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Application.Routes.Queries
 {
-    public class GetRouteByIdQuery : IRequest<RouteDto>
+    public class GetRouteByIdQuery : IQuery<RouteDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetRouteByIdQueryHandler : IRequestHandler<GetRouteByIdQuery, RouteDto>
+    public class GetRouteByIdQueryHandler : IQueryHandler<GetRouteByIdQuery, RouteDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;

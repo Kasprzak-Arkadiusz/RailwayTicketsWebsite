@@ -1,18 +1,18 @@
-﻿using Application.Common.DTOs;
+﻿using Application.Abstractions.Messaging;
+using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
-using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Trains.Queries
 {
-    public class GetAllTrainsQuery : IRequest<IEnumerable<TrainDto>>
+    public class GetAllTrainsQuery : IQuery<IEnumerable<TrainDto>>
     { }
 
-    public class GetAllTrainsQueryHandler : IRequestHandler<GetAllTrainsQuery ,IEnumerable<TrainDto>>
+    public class GetAllTrainsQueryHandler : IQueryHandler<GetAllTrainsQuery, IEnumerable<TrainDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
