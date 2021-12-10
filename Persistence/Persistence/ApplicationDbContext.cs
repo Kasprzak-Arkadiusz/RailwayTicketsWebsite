@@ -12,8 +12,7 @@ namespace Infrastructure.Persistence
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>, IApplicationDbContext
     {
         public ApplicationDbContext()
-        {
-        }
+        { }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

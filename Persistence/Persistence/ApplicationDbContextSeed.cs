@@ -1,10 +1,10 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Constants;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Common.Constants;
 
 namespace Infrastructure.Persistence
 {
@@ -29,7 +29,9 @@ namespace Infrastructure.Persistence
                 {
                     new (1024, 8, 256),
                     new (1769, 6, 288),
-                    new (317, 5, 240)
+                    new (317, 5, 240),
+                    new (1413, 7, 224),
+                    new (123, 8, 256)
                 };
                 context.Trains.AddRange(trains);
 
@@ -64,6 +66,16 @@ namespace Infrastructure.Persistence
                         NumberOfFreeSeats = --trains[2].NumberOfSeats,
                         IsSuspended = true,
                         Train = trains[2]
+                    },
+                    new()
+                    {
+                        StartingStation = stations[5],
+                        FinalStation = stations[1],
+                        DepartureTime = new DateTime(2021, 12, 19, 4, 0, 0),
+                        ArrivalTime = new DateTime(2021, 12, 20, 9, 0, 0),
+                        NumberOfFreeSeats = --trains[3].NumberOfSeats,
+                        IsSuspended = false,
+                        Train = trains[3]
                     }
                 };
                 context.Routes.AddRange(routes);
@@ -72,7 +84,8 @@ namespace Infrastructure.Persistence
                 {
                     new(64, trains[0]),
                     new(1, trains[1]),
-                    new(240, trains[2])
+                    new(240, trains[2]),
+                    new(111, trains[3])
                 };
                 context.Seats.AddRange(seats);
 
@@ -80,7 +93,8 @@ namespace Infrastructure.Persistence
                 {
                     new(seats[0]),
                     new(seats[1]),
-                    new(seats[2])
+                    new(seats[2]),
+                    new(seats[3])
                 };
                 context.SeatReservations.AddRange(seatReservations);
 
@@ -90,7 +104,8 @@ namespace Infrastructure.Persistence
                 {
                     new(userId, routes[0], trains[0], seatReservations[0]),
                     new(userId, routes[1], trains[1], seatReservations[1]),
-                    new(userId, routes[2], trains[2], seatReservations[2])
+                    new(userId, routes[2], trains[2], seatReservations[2]),
+                    new(userId, routes[3], trains[3], seatReservations[3])
                 };
                 context.Tickets.AddRange(tickets);
 
