@@ -96,6 +96,11 @@ If you want to log to database then provide also connectionString to database
 
 ## Sample views
 
+![](/ReadmeImages/Logging-in.png)
+![](/ReadmeImages/Find-routes.png)
+![](/ReadmeImages/User-tickets.png)
+![](/ReadmeImages/Returning-ticket.png)
+![](/ReadmeImages/Returned-tickets.png)
 
 ## Additional information
 The project uses role-based authentication so if you want to see all the features please log in as an employee or administrator with the following default credentials:  
