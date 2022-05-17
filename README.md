@@ -5,8 +5,8 @@
 * [General information](#general-information)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Sample views](#Sample-views)
-* [Additional information](#additional)
+* [Sample views](#sample-views)
+* [Additional information](#additional-information)
 
 ## Motivation
 This project was inspired by Jason Taylor Clean Architecture 
@@ -95,7 +95,6 @@ If you want to log to database then provide also connectionString to database
 7. Start program
 
 ## Sample views
-
 ![](/ReadmeImages/Logging-in.png)
 ![](/ReadmeImages/Find-routes.png)
 ![](/ReadmeImages/User-tickets.png)
